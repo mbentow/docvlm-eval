@@ -1,0 +1,16 @@
+# Ablation: same model, same prompt, constrained decoding turned OFF.
+#
+# The interesting number here is not accuracy — it is the `malformed` column and
+# the refusal count. This is the config that tells you whether `format: schema`
+# is earning its keep on your documents, instead of assuming it does.
+name: qwen3vl-30b-noschema
+runner: ollama
+model: qwen3-vl:30b-a3b-instruct
+host: ${OLLAMA_HOST:-http://localhost:11434}
+params:
+  temperature: 0
+  format: none
+  num_ctx: 8192
+  timeout: 300
+prompt: ../prompts/extract_v1.txt
+critical_fields: [doctor_crm, member_id]

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>hard-qwen3vl-8b</title>
+<style>
+ :root { color-scheme: light dark; }
+ body { font: 15px/1.55 ui-sans-serif,-apple-system,Segoe UI,Roboto,sans-serif;
+        max-width: 60rem; margin: 2rem auto; padding: 0 1rem; }
+ h1 { font-size: 1.4rem; margin-bottom: .2rem; }
+ .meta { color: #777; font-size: .85rem; margin-bottom: 1.4rem; }
+ table { border-collapse: collapse; width: 100%; margin: .8rem 0 1.6rem; font-size: .9rem; }
+ th, td { padding: .38rem .55rem; border-bottom: 1px solid #8883; text-align: right; }
+ th:first-child, td:first-child { text-align: left; font-family: ui-monospace,monospace; }
+ th { text-align: right; font-weight: 600; border-bottom: 2px solid #8886; }
+ .warn { color: #c0392b; font-weight: 600; }
+ .bar { background: linear-gradient(90deg,#4a90d9 var(--w),transparent var(--w));
+         border-radius: 2px; }
+ .headline { display: flex; gap: 2.5rem; margin: 1.2rem 0 2rem; flex-wrap: wrap; }
+ .headline div { }
+ .headline .n { font-size: 1.9rem; font-weight: 650; }
+ .headline .l { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em;
+                 color: #777; }
+ .note { background: #4a90d915; border-left: 3px solid #4a90d9; padding: .7rem 1rem;
+          font-size: .87rem; }
+ details { margin-top: 2rem; font-size: .8rem; }
+ pre { overflow-x: auto; background: #8881; padding: .8rem; border-radius: 4px; }
+</style></head><body>
+
+<h1>hard-qwen3vl-8b</h1>
+<div class="meta">config <code>qwen3vl-8b</code> ·
+ corpus <code>synthetic-forms-hard</code> @ <code>d45cda24b564</code> ·
+ 60 cases</div>
+
+<div class="headline">
+  <div><div class="n">0.781</div>
+       <div class="l">macro accuracy <small>[0.702, 0.855]</small></div></div>
+  <div><div class="n">0.583</div>
+       <div class="l">all fields correct <small>[0.467, 0.700]</small></div></div>
+  <div><div class="n">0.00%</div>
+       <div class="l">hallucination rate</div></div>
+  <div><div class="n">12,744<small>ms</small></div>
+       <div class="l">latency p50 · p95 13,261ms</div></div>
+</div>
+
+<div class="note"><b>all fields correct</b> is the number that maps to the
+business: a document with one wrong field still needs a human.</div>
+
+<h2>Per field</h2>
+<table><thead><tr><th>field</th><th>acc</th><th>95% CI</th><th>missing</th>
+<th>hallucinated</th><th>wrong</th><th>malformed</th><th>refused</th></tr></thead>
+<tbody><tr><td>patient_name</td><td class="bar" style="--w:83%">0.833</td><td>0.733–0.917</td><td>0.0%</td><td>0.0%</td><td>16.7%</td><td>0.0%</td><td>0.0%</td></tr><tr><td>doctor_crm ★</td><td class="bar" style="--w:77%">0.767</td><td>0.667–0.867</td><td>3.3%</td><td>0.0%</td><td>20.0%</td><td>0.0%</td><td>0.0%</td></tr><tr><td>insurer</td><td class="bar" style="--w:73%">0.733</td><td>0.617–0.833</td><td>20.0%</td><td>0.0%</td><td>6.7%</td><td>0.0%</td><td>0.0%</td></tr><tr><td>member_id ★</td><td class="bar" style="--w:77%">0.767</td><td>0.650–0.867</td><td>10.0%</td><td>0.0%</td><td>13.3%</td><td>0.0%</td><td>0.0%</td></tr><tr><td>exams</td><td class="bar" style="--w:70%">0.700</td><td>0.583–0.817</td><td>3.3%</td><td>0.0%</td><td>26.7%</td><td>0.0%</td><td>0.0%</td></tr><tr><td>request_date</td><td class="bar" style="--w:70%">0.700</td><td>0.583–0.817</td><td>3.3%</td><td>0.0%</td><td>26.7%</td><td>0.0%</td><td>0.0%</td></tr><tr><td>urgent</td><td class="bar" style="--w:97%">0.967</td><td>0.917–1.000</td><td>0.0%</td><td>0.0%</td><td>3.3%</td><td>0.0%</td><td>0.0%</td></tr></tbody></table>
+
+<h2>By tag</h2><table><thead><tr><th>tag</th><th>acc</th><th>all-ok</th><th>n</th></tr></thead><tbody><tr><td>motion_blur</td><td class="bar" style="--w:36%">0.361</td><td>0.000</td><td>17</td></tr><tr><td>low_light</td><td class="bar" style="--w:61%">0.610</td><td>0.182</td><td>11</td></tr><tr><td>stamped</td><td class="bar" style="--w:64%">0.643</td><td>0.500</td><td>2</td></tr><tr><td>phone_photo</td><td class="bar" style="--w:76%">0.758</td><td>0.538</td><td>39</td></tr><tr><td>handwritten</td><td class="bar" style="--w:78%">0.777</td><td>0.564</td><td>39</td></tr><tr><td>printed</td><td class="bar" style="--w:79%">0.789</td><td>0.619</td><td>21</td></tr><tr><td>skewed</td><td class="bar" style="--w:82%">0.816</td><td>0.571</td><td>14</td></tr><tr><td>scanned</td><td class="bar" style="--w:82%">0.823</td><td>0.667</td><td>21</td></tr><tr><td>partial</td><td class="bar" style="--w:86%">0.857</td><td>0.800</td><td>5</td></tr><tr><td>glare</td><td class="bar" style="--w:94%">0.941</td><td>0.824</td><td>17</td></tr><tr><td>faded</td><td class="bar" style="--w:100%">1.000</td><td>1.000</td><td>2</td></tr><tr><td>rotated</td><td class="bar" style="--w:100%">1.000</td><td>1.000</td><td>1</td></tr></tbody></table>
+
+<details><summary>Provenance</summary>
+<pre>{
+  &quot;docvlm_eval_version&quot;: &quot;0.2.0&quot;,
+  &quot;python&quot;: &quot;3.11.15&quot;,
+  &quot;platform&quot;: &quot;Linux-6.8.0-124-generic-aarch64-with-glibc2.35&quot;,
+  &quot;config&quot;: {
+    &quot;name&quot;: &quot;qwen3vl-8b&quot;,
+    &quot;runner&quot;: &quot;ollama&quot;,
+    &quot;model&quot;: &quot;qwen3-vl:8b-instruct&quot;,
+    &quot;params&quot;: {
+      &quot;temperature&quot;: 0,
+      &quot;format&quot;: &quot;schema&quot;,
+      &quot;num_ctx&quot;: 8192,
+      &quot;timeout&quot;: 300
+    },
+    &quot;prompt_file&quot;: &quot;../prompts/extract_v1.txt&quot;,
+    &quot;host&quot;: &quot;http://localhost:11434&quot;,
+    &quot;preprocess&quot;: &quot;none&quot;,
+    &quot;weights&quot;: {},
+    &quot;critical_fields&quot;: [
+      &quot;doctor_crm&quot;,
+      &quot;member_id&quot;
+    ],
+    &quot;source_path&quot;: &quot;qwen3vl-8b.yaml&quot;,
+    &quot;prompt_hash&quot;: &quot;d59ccf92ae4c&quot;,
+    &quot;config_hash&quot;: &quot;838de2e753bd&quot;
+  },
+  &quot;prompt_hash&quot;: &quot;d59ccf92ae4c&quot;,
+  &quot;schema_hash&quot;: &quot;acd6aaa82321&quot;,
+  &quot;corpus_hash&quot;: &quot;d45cda24b564&quot;,
+  &quot;n_cases&quot;: 60,
+  &quot;concurrency&quot;: 3,
+  &quot;backend&quot;: {
+    &quot;runner&quot;: &quot;ollama&quot;,
+    &quot;model&quot;: &quot;qwen3-vl:8b-instruct&quot;,
+    &quot;hosts&quot;: [
+      &quot;http://localhost:11434&quot;
+    ],
+    &quot;quantization&quot;: &quot;Q4_K_M&quot;,
+    &quot;parameter_size&quot;: &quot;8.8B&quot;,
+    &quot;family&quot;: &quot;qwen3vl&quot;,
+    &quot;model_digest&quot;: &quot;0533d74300e4f9bc&quot;,
+    &quot;model_size_bytes&quot;: 6140415975,
+    &quot;server_version&quot;: &quot;0.31.2&quot;
+  }
+}</pre></details>
+
+</body></html>

@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Install
+        run: uv pip install --system -e ".[dev]"
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Format
+        run: ruff format --check .
+
+      - name: Test
+        run: pytest -q
+
+      # Dogfooding: the tool gates its own pipeline. The mock backend needs no
+      # GPU, so a change that breaks scoring fails CI here rather than silently
+      # shifting every number in a report.
+      - name: Self-check against the synthetic corpus
+        run: |
+          docvlm-eval validate --corpus corpora/synthetic-forms
+          docvlm-eval validate --corpus corpora/synthetic-forms-hard
+          docvlm-eval run \
+            --corpus corpora/synthetic-forms \
+            --config configs/mock-baseline.yaml \
+            --runs-dir /tmp/runs --cache-dir /tmp/cache \
+            --bootstrap 300 --overwrite --fail-under 0.70
+
+      # The committed runs are the evidence behind every number in the README.
+      # If a change to scoring moves them, that has to be a visible decision.
+      - name: Stored runs still re-render
+        run: |
+          docvlm-eval report --run hard-qwen3vl-8b --runs-dir examples/runs \
+            --format md --bootstrap 400 > /dev/null
+          docvlm-eval diff -b hard-qwen3vl-30b -k hard-qwen3vl-8b \
+            --runs-dir examples/runs --bootstrap 400 > /dev/null
+
+      - name: README numbers still hold
+        run: |
+          docvlm-eval report --run hard-qwen3vl-8b --runs-dir examples/runs \
+            --format json --bootstrap 0 \
+            | python -c "import json,sys; m=json.load(sys.stdin); \
+              assert round(m['macro_accuracy'],3)==0.781, m['macro_accuracy']; \
+              assert round(m['all_fields_correct'],3)==0.583, m['all_fields_correct']; \
+              assert m['hallucination_rate']==0.0, m['hallucination_rate']"

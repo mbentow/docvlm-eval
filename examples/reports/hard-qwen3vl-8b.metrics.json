@@ -1,0 +1,269 @@
+{
+  "run_name": "hard-qwen3vl-8b",
+  "config_name": "qwen3vl-8b",
+  "corpus_name": "synthetic-forms-hard",
+  "corpus_hash": "d45cda24b564",
+  "n_cases": 60,
+  "fields": [
+    {
+      "name": "patient_name",
+      "n": 60,
+      "accuracy": 0.8333333333333334,
+      "accuracy_ci": {
+        "value": 0.8333333333333334,
+        "low": 0.7333333333333333,
+        "high": 0.9166666666666666
+      },
+      "missing_rate": 0.0,
+      "hallucination_rate": 0.0,
+      "wrong_rate": 0.16666666666666666,
+      "malformed_rate": 0.0,
+      "refused_rate": 0.0,
+      "mean_score": 0.9408156420462922,
+      "critical": false
+    },
+    {
+      "name": "doctor_crm",
+      "n": 60,
+      "accuracy": 0.7666666666666667,
+      "accuracy_ci": {
+        "value": 0.7666666666666667,
+        "low": 0.6666666666666666,
+        "high": 0.8666666666666667
+      },
+      "missing_rate": 0.03333333333333333,
+      "hallucination_rate": 0.0,
+      "wrong_rate": 0.2,
+      "malformed_rate": 0.0,
+      "refused_rate": 0.0,
+      "mean_score": 0.8975925925925926,
+      "critical": true
+    },
+    {
+      "name": "insurer",
+      "n": 60,
+      "accuracy": 0.7333333333333333,
+      "accuracy_ci": {
+        "value": 0.7333333333333333,
+        "low": 0.6166666666666667,
+        "high": 0.8333333333333334
+      },
+      "missing_rate": 0.2,
+      "hallucination_rate": 0.0,
+      "wrong_rate": 0.06666666666666667,
+      "malformed_rate": 0.0,
+      "refused_rate": 0.0,
+      "mean_score": 0.77,
+      "critical": false
+    },
+    {
+      "name": "member_id",
+      "n": 60,
+      "accuracy": 0.7666666666666667,
+      "accuracy_ci": {
+        "value": 0.7666666666666667,
+        "low": 0.65,
+        "high": 0.8666666666666667
+      },
+      "missing_rate": 0.1,
+      "hallucination_rate": 0.0,
+      "wrong_rate": 0.13333333333333333,
+      "malformed_rate": 0.0,
+      "refused_rate": 0.0,
+      "mean_score": 0.8755555555555555,
+      "critical": true
+    },
+    {
+      "name": "exams",
+      "n": 60,
+      "accuracy": 0.7,
+      "accuracy_ci": {
+        "value": 0.7,
+        "low": 0.5833333333333334,
+        "high": 0.8166666666666667
+      },
+      "missing_rate": 0.03333333333333333,
+      "hallucination_rate": 0.0,
+      "wrong_rate": 0.26666666666666666,
+      "malformed_rate": 0.0,
+      "refused_rate": 0.0,
+      "mean_score": 0.7277777777777777,
+      "critical": false
+    },
+    {
+      "name": "request_date",
+      "n": 60,
+      "accuracy": 0.7,
+      "accuracy_ci": {
+        "value": 0.7,
+        "low": 0.5833333333333334,
+        "high": 0.8166666666666667
+      },
+      "missing_rate": 0.03333333333333333,
+      "hallucination_rate": 0.0,
+      "wrong_rate": 0.26666666666666666,
+      "malformed_rate": 0.0,
+      "refused_rate": 0.0,
+      "mean_score": 0.7,
+      "critical": false
+    },
+    {
+      "name": "urgent",
+      "n": 60,
+      "accuracy": 0.9666666666666667,
+      "accuracy_ci": {
+        "value": 0.9666666666666667,
+        "low": 0.9166666666666666,
+        "high": 1.0
+      },
+      "missing_rate": 0.0,
+      "hallucination_rate": 0.0,
+      "wrong_rate": 0.03333333333333333,
+      "malformed_rate": 0.0,
+      "refused_rate": 0.0,
+      "mean_score": 0.9666666666666667,
+      "critical": false
+    }
+  ],
+  "macro_accuracy": 0.780952380952381,
+  "macro_accuracy_ci": {
+    "value": 0.780952380952381,
+    "low": 0.7023809523809523,
+    "high": 0.8547619047619047
+  },
+  "all_fields_correct": 0.5833333333333334,
+  "all_fields_correct_ci": {
+    "value": 0.5833333333333334,
+    "low": 0.4666666666666667,
+    "high": 0.7
+  },
+  "hallucination_rate": 0.0,
+  "critical_hallucination_rate": 0.0,
+  "by_tag": [
+    {
+      "tag": "motion_blur",
+      "n": 17,
+      "accuracy": 0.36134453781512604,
+      "all_fields_correct": 0.0
+    },
+    {
+      "tag": "low_light",
+      "n": 11,
+      "accuracy": 0.6103896103896104,
+      "all_fields_correct": 0.18181818181818182
+    },
+    {
+      "tag": "stamped",
+      "n": 2,
+      "accuracy": 0.6428571428571429,
+      "all_fields_correct": 0.5
+    },
+    {
+      "tag": "phone_photo",
+      "n": 39,
+      "accuracy": 0.7582417582417583,
+      "all_fields_correct": 0.5384615384615384
+    },
+    {
+      "tag": "handwritten",
+      "n": 39,
+      "accuracy": 0.7765567765567766,
+      "all_fields_correct": 0.5641025641025641
+    },
+    {
+      "tag": "printed",
+      "n": 21,
+      "accuracy": 0.7891156462585035,
+      "all_fields_correct": 0.6190476190476191
+    },
+    {
+      "tag": "skewed",
+      "n": 14,
+      "accuracy": 0.8163265306122449,
+      "all_fields_correct": 0.5714285714285714
+    },
+    {
+      "tag": "scanned",
+      "n": 21,
+      "accuracy": 0.8231292517006803,
+      "all_fields_correct": 0.6666666666666666
+    },
+    {
+      "tag": "partial",
+      "n": 5,
+      "accuracy": 0.8571428571428571,
+      "all_fields_correct": 0.8
+    },
+    {
+      "tag": "glare",
+      "n": 17,
+      "accuracy": 0.9411764705882353,
+      "all_fields_correct": 0.8235294117647058
+    },
+    {
+      "tag": "faded",
+      "n": 2,
+      "accuracy": 1.0,
+      "all_fields_correct": 1.0
+    },
+    {
+      "tag": "rotated",
+      "n": 1,
+      "accuracy": 1.0,
+      "all_fields_correct": 1.0
+    }
+  ],
+  "latency_p50": 12744.37021400081,
+  "latency_p95": 13260.734673000115,
+  "latency_mean": 12231.143316916738,
+  "tokens_in_mean": 1307.5666666666666,
+  "tokens_out_mean": 101.11666666666666,
+  "cost_total": 0.0,
+  "n_refused": 0,
+  "n_cached": 60,
+  "provenance": {
+    "docvlm_eval_version": "0.2.0",
+    "python": "3.11.15",
+    "platform": "Linux-6.8.0-124-generic-aarch64-with-glibc2.35",
+    "config": {
+      "name": "qwen3vl-8b",
+      "runner": "ollama",
+      "model": "qwen3-vl:8b-instruct",
+      "params": {
+        "temperature": 0,
+        "format": "schema",
+        "num_ctx": 8192,
+        "timeout": 300
+      },
+      "prompt_file": "../prompts/extract_v1.txt",
+      "host": "http://localhost:11434",
+      "preprocess": "none",
+      "weights": {},
+      "critical_fields": [
+        "doctor_crm",
+        "member_id"
+      ],
+      "source_path": "qwen3vl-8b.yaml",
+      "prompt_hash": "d59ccf92ae4c",
+      "config_hash": "838de2e753bd"
+    },
+    "prompt_hash": "d59ccf92ae4c",
+    "schema_hash": "acd6aaa82321",
+    "corpus_hash": "d45cda24b564",
+    "n_cases": 60,
+    "concurrency": 3,
+    "backend": {
+      "runner": "ollama",
+      "model": "qwen3-vl:8b-instruct",
+      "hosts": [
+        "http://localhost:11434"
+      ],
+      "quantization": "Q4_K_M",
+      "parameter_size": "8.8B",
+      "family": "qwen3vl",
+      "model_digest": "0533d74300e4f9bc",
+      "model_size_bytes": 6140415975,
+      "server_version": "0.31.2"
+    }
+  }
+}

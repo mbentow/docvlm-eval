@@ -1,0 +1,14 @@
+# Same prompt and schema, smaller model. Changing exactly one variable is the
+# only way a comparison means anything.
+name: qwen3vl-8b
+runner: ollama
+model: qwen3-vl:8b-instruct
+host: ${OLLAMA_HOST:-http://localhost:11434}
+params:
+  temperature: 0
+  format: schema
+  num_ctx: 8192
+  timeout: 300
+prompt: ../prompts/extract_v1.txt
+preprocess: none
+critical_fields: [doctor_crm, member_id]

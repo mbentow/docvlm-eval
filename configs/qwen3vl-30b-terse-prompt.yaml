@@ -1,0 +1,18 @@
+# Prompt A/B: identical model, identical parameters, shorter prompt.
+#
+# Diff this against `qwen3vl-30b` to answer "did those extra prompt lines buy
+# anything?" — a question usually settled by looking at three documents and a
+# feeling. Changing exactly one variable is what makes the answer mean anything,
+# and the config hash covers the prompt, so the cache invalidates correctly.
+name: qwen3vl-30b-terse
+runner: ollama
+model: qwen3-vl:30b-a3b-instruct
+host: ${OLLAMA_HOST:-http://localhost:11434}
+params:
+  temperature: 0
+  format: schema
+  num_ctx: 8192
+  timeout: 300
+prompt: ../prompts/extract_v2_terse.txt
+preprocess: none
+critical_fields: [doctor_crm, member_id]

@@ -1,0 +1,21 @@
+# Local vision model on Ollama.
+#
+#   OLLAMA_HOST=http://localhost:11434 \
+#   docvlm-eval run -c corpora/synthetic-forms -f configs/qwen3vl-30b.yaml -j 2
+#
+# format: schema  -> constrained decoding against the JSON Schema. This is the
+#                    cheapest quality win available and it is on by default.
+# temperature: 0  -> without it, two runs of the same config differ, and every
+#                    A/B you run afterwards is measuring sampling noise.
+name: qwen3vl-30b
+runner: ollama
+model: qwen3-vl:30b-a3b-instruct
+host: ${OLLAMA_HOST:-http://localhost:11434}
+params:
+  temperature: 0
+  format: schema
+  num_ctx: 8192
+  timeout: 300
+prompt: ../prompts/extract_v1.txt
+preprocess: none
+critical_fields: [doctor_crm, member_id]

@@ -1,0 +1,7 @@
+Read the document and fill the JSON schema.
+
+Copy values verbatim. Use null for anything absent or unreadable — never guess.
+For `exams`, include only what is explicitly marked on the form.
+
+Fields:
+{fields}

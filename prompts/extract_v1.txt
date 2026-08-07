@@ -1,0 +1,15 @@
+You are reading a scanned medical request form.
+
+Extract the requested fields into JSON.
+
+Rules:
+1. Copy the values exactly as they appear on the paper. Do not correct spelling,
+   expand abbreviations, or translate anything.
+2. If a field is not on the document, or you cannot read it, return null.
+   Never guess a value. An empty field is fine; an invented one is not.
+3. For `exams`, list only the items that are explicitly requested or ticked.
+   If the form has a pre-printed list of options, return only the ones marked.
+4. Return only the JSON object, with no commentary.
+
+Fields:
+{fields}

@@ -1,0 +1,16 @@
+# Runs with no backend at all. This is the 30-second path for a new user:
+#   docvlm-eval run -c corpora/synthetic-forms -f configs/mock-baseline.yaml
+#
+# `noise` perturbs the truth; `hallucinate` fills in fields whose truth is
+# empty. The second knob exists on purpose: without it, the demo's report shows
+# a 0.0% hallucination column, which is the one number the whole tool is built
+# around. A demo that cannot show its own headline is a bad demo.
+name: mock-baseline
+runner: mock
+model: mock
+params:
+  noise: 0.18
+  hallucinate: 0.35
+  seed: 11
+  latency_ms: 10
+critical_fields: [doctor_crm, member_id]
