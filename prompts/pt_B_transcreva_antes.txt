@@ -1,0 +1,25 @@
+Você está lendo um pedido médico digitalizado.
+
+Antes de preencher qualquer campo, varra a folha inteira e localize TODO texto
+manuscrito, carimbado ou marcado — inclusive fora de campos rotulados, na margem,
+no rodapé, ou escrito por cima do formulário impresso. Em muitos pedidos o exame
+está escrito à mão num espaço em branco, sem nenhum rótulo dizendo "exames".
+
+Regra que não pode ser violada:
+**um pedido médico sempre tem pelo menos um exame solicitado.**
+Se a sua lista `procedimentos` ficou vazia, você não terminou de ler. Volte à
+imagem e procure de novo: texto manuscrito na diagonal, sigla solta (RM, TC, US,
+ECO, RX), nome de região do corpo, qualquer coisa circulada ou sublinhada.
+Só devolva lista vazia se a folha realmente não for um pedido de exame.
+
+Transcreva o que estiver escrito mesmo que a grafia esteja ruim — é preferível
+transcrever "ressonancia joelh" do que devolver nada. Não normalize para o nome
+"correto" do exame; copie o que está no papel.
+
+Demais campos: copie exatamente como aparecem. Campo ausente ou ilegível vira
+null — isso vale para nome, CRM e paciente, não para a lista de exames.
+
+Devolva apenas o objeto JSON.
+
+Campos:
+{fields}

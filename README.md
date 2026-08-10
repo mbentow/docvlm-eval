@@ -184,6 +184,46 @@ generously, and read the counts.
 
 **Operational cost.** Latency p50/p95, tokens in/out, cost per document (0 for local).
 
+**Coverage vs accuracy — the number that decides the product.** Accuracy alone does not tell
+you whether a system is deployable. This does, for `qwen3-vl:30b-a3b` on the hard corpus:
+
+```
+AUTOMATE ┃   ACC ┃ ERR ESCAPING ┃  HALL
+━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━
+     50% │ 1.000 │         0.0% │ 0.00%
+     60% │ 0.889 │        11.1% │ 0.00%
+     70% │ 0.762 │        23.8% │ 0.00%
+     80% │ 0.667 │        33.3% │ 0.00%
+    100% │ 0.533 │        46.7% │ 0.48%
+AURC 0.1353 vs random 0.4421 — ranking gain 69%
+```
+
+Read as a whole the run scores 0.533. But **its most-confident half is 1.000, with nothing
+escaping review** — the model does know which documents it got wrong. A model at 0.75 that
+knows which quarter it failed beats a model at 0.80 that is uniformly, confidently mediocre.
+
+**But do not read a coverage level off that table and call it a result.** The level was chosen
+by looking at the same documents it is then evaluated on. `validate_holdout` fits the coverage
+on a random half and measures it on the other, 200 times:
+
+```
+target 0.95 → automate 54% → real accuracy 0.917 [0.571, 1.000] vs 0.533 with no policy
+              lift +0.384, target actually met on 60% of splits
+```
+
+The policy is worth having — a **+0.38 lift** on the automated slice is not noise. But the
+target survives the transfer only 60% of the time, and the interval reaches down to 0.571.
+That gap between the curve (1.000 at 50%) and the honest out-of-sample number (0.917 at 54%)
+is what selecting an operating point on your evaluation set costs you, and it is the number
+to take into a production decision.
+
+Two guards make the section trustworthy: AURC is compared against the mean of 25 random
+orderings, so a confidence signal that does not rank is reported as such instead of getting a
+persuasive curve; and a policy that would automate less than 5% is rejected rather than
+counted as a success, because "meets 95% by accepting one lucky document" is not a policy.
+Confidence comes from a `confidence` field in your schema if you declare one, and from the
+mean field score otherwise.
+
 ---
 
 ## Comparison is declared per field, not globally

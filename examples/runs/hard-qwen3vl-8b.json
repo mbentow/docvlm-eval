@@ -1,0 +1,4746 @@
+{
+  "name": "hard-qwen3vl-8b",
+  "corpus_name": "synthetic-forms-hard",
+  "corpus_hash": "d45cda24b564",
+  "config_name": "qwen3vl-8b",
+  "config_hash": "838de2e753bd",
+  "field_names": [
+    "patient_name",
+    "doctor_crm",
+    "insurer",
+    "member_id",
+    "exams",
+    "request_date",
+    "urgent"
+  ],
+  "weights": {
+    "patient_name": 1.0,
+    "doctor_crm": 1.0,
+    "insurer": 1.0,
+    "member_id": 1.0,
+    "exams": 1.0,
+    "request_date": 1.0,
+    "urgent": 1.0
+  },
+  "critical_fields": [
+    "doctor_crm",
+    "member_id"
+  ],
+  "provenance": {
+    "docvlm_eval_version": "0.2.0",
+    "python": "3.11.15",
+    "platform": "Linux-6.8.0-124-generic-aarch64-with-glibc2.35",
+    "config": {
+      "name": "qwen3vl-8b",
+      "runner": "ollama",
+      "model": "qwen3-vl:8b-instruct",
+      "params": {
+        "temperature": 0,
+        "format": "schema",
+        "num_ctx": 8192,
+        "timeout": 300
+      },
+      "prompt_file": "../prompts/extract_v1.txt",
+      "host": "http://localhost:11434",
+      "preprocess": "none",
+      "weights": {},
+      "critical_fields": [
+        "doctor_crm",
+        "member_id"
+      ],
+      "source_path": "qwen3vl-8b.yaml",
+      "prompt_hash": "d59ccf92ae4c",
+      "config_hash": "838de2e753bd"
+    },
+    "prompt_hash": "d59ccf92ae4c",
+    "schema_hash": "acd6aaa82321",
+    "corpus_hash": "d45cda24b564",
+    "n_cases": 60,
+    "concurrency": 3,
+    "backend": {
+      "runner": "ollama",
+      "model": "qwen3-vl:8b-instruct",
+      "hosts": [
+        "http://localhost:11434"
+      ],
+      "quantization": "Q4_K_M",
+      "parameter_size": "8.8B",
+      "family": "qwen3vl",
+      "model_digest": "0533d74300e4f9bc",
+      "model_size_bytes": 6140415975,
+      "server_version": "0.31.2"
+    }
+  },
+  "started_at": "2026-08-07T13:39:56.106420+00:00",
+  "finished_at": "2026-08-07T13:39:56.408540+00:00",
+  "cases": [
+    {
+      "case_id": "0001",
+      "tags": [
+        "handwritten",
+        "scanned",
+        "glare"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Marcelo Nogueira",
+          "predicted": "Marcelo Nogueira",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "55524-SP",
+          "predicted": "CRM 55524-SP",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Interclin",
+          "predicted": "Interclin",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "327460239078",
+          "predicted": "327460239078",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Ultrassom abdominal total"
+          ],
+          "predicted": [
+            "Ultrassom abdominal total"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-03-29",
+          "predicted": "29/03/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 7572.93258700156,
+      "tokens_in": 1305,
+      "tokens_out": 101,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Marcelo Nogueira\",\n    \"doctor_crm\": \"CRM 55524-SP\",\n    \"insurer\": \"Interclin\",\n    \"member_id\": \"327460239078\",\n    \"exams\": [\n        \"Ultrassom abdominal total\"\n    ],\n    \"request_date\": \"29/03/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0002",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "low_light"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Bianca Nogueira",
+          "predicted": "Bianca Nogueira",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "wrong",
+          "truth": "99530-BA",
+          "predicted": "99530-B4",
+          "score": 0.8333333333333334,
+          "detail": "1 digit(s) off"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Vitalis Saude",
+          "predicted": "Vitalis Saude",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "824896506",
+          "predicted": "824896506",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Teste ergometrico",
+            "Doppler de carotidas"
+          ],
+          "predicted": [
+            "Teste ergometrico",
+            "Doppler de carotidas"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (2/2)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-07-05",
+          "predicted": "05/07/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 11904.931838998891,
+      "tokens_in": 1305,
+      "tokens_out": 108,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Bianca Nogueira\",\n    \"doctor_crm\": \"99530-B4\",\n    \"insurer\": \"Vitalis Saude\",\n    \"member_id\": \"824896506\",\n    \"exams\": [\n        \"Teste ergometrico\",\n        \"Doppler de carotidas\"\n    ],\n    \"request_date\": \"05/07/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0003",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "skewed",
+        "motion_blur"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "wrong",
+          "truth": "Leonardo Bezerra",
+          "predicted": "Leonardo Bexeras",
+          "score": 0.8125,
+          "detail": "similarity 0.812"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "wrong",
+          "truth": "34486-BA",
+          "predicted": "CRM 24680-BA",
+          "score": 0.4,
+          "detail": "3 digit(s) off"
+        },
+        {
+          "field": "insurer",
+          "outcome": "missing",
+          "truth": "Boavida Assistencia",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": null,
+          "predicted": null,
+          "score": 1.0,
+          "detail": "both empty"
+        },
+        {
+          "field": "exams",
+          "outcome": "wrong",
+          "truth": [
+            "Doppler de carotidas"
+          ],
+          "predicted": [
+            "Doppler de cavidade"
+          ],
+          "score": 0.0,
+          "detail": "P 0.00 R 0.00 F1 0.00 (0/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "wrong",
+          "truth": "2026-05-24",
+          "predicted": "26/05/2025",
+          "score": 0.0,
+          "detail": "363d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": true,
+          "predicted": true,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 15951.56092400066,
+      "tokens_in": 1316,
+      "tokens_out": 86,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Leonardo Bexeras\",\n    \"doctor_crm\": \"CRM 24680-BA\",\n    \"insurer\": null,\n    \"member_id\": null,\n    \"exams\": [\n        \"Doppler de cavidade\"\n    ],\n    \"request_date\": \"26/05/2025\",\n    \"urgent\": true\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0004",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "partial",
+        "motion_blur"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "wrong",
+          "truth": "Simone Peixoto",
+          "predicted": "Silmara Fatima",
+          "score": 0.2142857142857143,
+          "detail": "similarity 0.214"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "10184-MG",
+          "predicted": "CRM 10184 MG",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "wrong",
+          "truth": "Meridiano Saude",
+          "predicted": "Maridian Saúde",
+          "score": 0.8666666666666667,
+          "detail": "similarity 0.867"
+        },
+        {
+          "field": "member_id",
+          "outcome": "wrong",
+          "truth": "178144495011418",
+          "predicted": "279144450011416",
+          "score": 0.6666666666666667,
+          "detail": "5 digit(s) off"
+        },
+        {
+          "field": "exams",
+          "outcome": "wrong",
+          "truth": [
+            "Doppler de carotidas"
+          ],
+          "predicted": [
+            "a. Doppler de carotídeos"
+          ],
+          "score": 0.0,
+          "detail": "P 0.00 R 0.00 F1 0.00 (0/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "wrong",
+          "truth": "2026-05-22",
+          "predicted": "23/05/2020",
+          "score": 0.0,
+          "detail": "2190d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12816.57525600167,
+      "tokens_in": 1305,
+      "tokens_out": 107,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Silmara Fatima\",\n    \"doctor_crm\": \"CRM 10184 MG\",\n    \"insurer\": \"Maridian Saúde\",\n    \"member_id\": \"279144450011416\",\n    \"exams\": [\n        \"a. Doppler de carotídeos\"\n    ],\n    \"request_date\": \"23/05/2020\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0005",
+      "tags": [
+        "handwritten",
+        "phone_photo"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Rafael Siqueira",
+          "predicted": "Rafael Siqueira",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "89419-BA",
+          "predicted": "CRM 89419-BA",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Interclin",
+          "predicted": "Interclin",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "526683750477",
+          "predicted": "526683750477",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Holter 24h"
+          ],
+          "predicted": [
+            "Holter 24h"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-05-25",
+          "predicted": "25/05/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12684.13329699979,
+      "tokens_in": 1305,
+      "tokens_out": 101,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Rafael Siqueira\",\n    \"doctor_crm\": \"CRM 89419-BA\",\n    \"insurer\": \"Interclin\",\n    \"member_id\": \"526683750477\",\n    \"exams\": [\n        \"Holter 24h\"\n    ],\n    \"request_date\": \"25/05/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0006",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "glare"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Eduardo Siqueira",
+          "predicted": "Eduardo Siqueira",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "69160-PR",
+          "predicted": "CRM 69160-PR",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Particular",
+          "predicted": "Particular",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "084627004145760",
+          "predicted": "084627004145760",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Ultrassom de tireoide"
+          ],
+          "predicted": [
+            "Ultrassom de tireoide"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-06-06",
+          "predicted": "06/06/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12924.646755996946,
+      "tokens_in": 1305,
+      "tokens_out": 106,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Eduardo Siqueira\",\n    \"doctor_crm\": \"CRM 69160-PR\",\n    \"insurer\": \"Particular\",\n    \"member_id\": \"084627004145760\",\n    \"exams\": [\n        \"Ultrassom de tireoide\"\n    ],\n    \"request_date\": \"06/06/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0007",
+      "tags": [
+        "printed",
+        "scanned",
+        "glare"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Leonardo Bittencourt",
+          "predicted": "Leonardo Bittencourt",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "92828-BA",
+          "predicted": "CRM 92828-BA",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Interclin",
+          "predicted": "Interclin",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "251368518719567",
+          "predicted": "251368518719567",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Densitometria ossea"
+          ],
+          "predicted": [
+            "Densitometria ossea"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-04-29",
+          "predicted": "29/04/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12793.862673002877,
+      "tokens_in": 1305,
+      "tokens_out": 105,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Leonardo Bittencourt\",\n    \"doctor_crm\": \"CRM 92828-BA\",\n    \"insurer\": \"Interclin\",\n    \"member_id\": \"251368518719567\",\n    \"exams\": [\n        \"Densitometria ossea\"\n    ],\n    \"request_date\": \"29/04/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0008",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "low_light",
+        "skewed",
+        "motion_blur"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "wrong",
+          "truth": "Marcelo Rezende",
+          "predicted": "Marcia Bezerra",
+          "score": 0.5333333333333333,
+          "detail": "similarity 0.533"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "wrong",
+          "truth": "60230-BA",
+          "predicted": "CRM 69235 BA",
+          "score": 0.6,
+          "detail": "2 digit(s) off"
+        },
+        {
+          "field": "insurer",
+          "outcome": "missing",
+          "truth": "Plano Aurora",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": null,
+          "predicted": null,
+          "score": 1.0,
+          "detail": "both empty"
+        },
+        {
+          "field": "exams",
+          "outcome": "missing",
+          "truth": [
+            "Mamografia bilateral"
+          ],
+          "predicted": [],
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "request_date",
+          "outcome": "wrong",
+          "truth": "2026-03-29",
+          "predicted": "28/07/2018",
+          "score": 0.0,
+          "detail": "2801d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12587.50350599803,
+      "tokens_in": 1316,
+      "tokens_out": 73,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Marcia Bezerra\",\n    \"doctor_crm\": \"CRM 69235 BA\",\n    \"insurer\": null,\n    \"member_id\": null,\n    \"exams\": [],\n    \"request_date\": \"28/07/2018\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0009",
+      "tags": [
+        "printed",
+        "phone_photo"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Eduardo Bezerra",
+          "predicted": "Eduardo Bezerra",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "60067-SC",
+          "predicted": "60067-SC",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Interclin",
+          "predicted": "Interclin",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "653588042",
+          "predicted": "653588042",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Holter 24h"
+          ],
+          "predicted": [
+            "Holter 24h"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-03-11",
+          "predicted": "11/03/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12394.115340001008,
+      "tokens_in": 1305,
+      "tokens_out": 95,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Eduardo Bezerra\",\n    \"doctor_crm\": \"60067-SC\",\n    \"insurer\": \"Interclin\",\n    \"member_id\": \"653588042\",\n    \"exams\": [\n        \"Holter 24h\"\n    ],\n    \"request_date\": \"11/03/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0010",
+      "tags": [
+        "handwritten",
+        "phone_photo"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Vinicius Nogueira",
+          "predicted": "Vinicius Nogueira",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "78606-PR",
+          "predicted": "CRM 78606-PR",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Vitalis Saude",
+          "predicted": "Vitalis Saude",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": null,
+          "predicted": null,
+          "score": 1.0,
+          "detail": "both empty"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Ultrassom abdominal total",
+            "Raio-X de torax PA e perfil"
+          ],
+          "predicted": [
+            "Ultrassom abdominal total",
+            "Raio-X de torax PA e perfil"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (2/2)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-03-26",
+          "predicted": "26/03/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12325.183547000051,
+      "tokens_in": 1305,
+      "tokens_out": 104,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Vinicius Nogueira\",\n    \"doctor_crm\": \"CRM 78606-PR\",\n    \"insurer\": \"Vitalis Saude\",\n    \"member_id\": null,\n    \"exams\": [\n        \"Ultrassom abdominal total\",\n        \"Raio-X de torax PA e perfil\"\n    ],\n    \"request_date\": \"26/03/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0011",
+      "tags": [
+        "printed",
+        "scanned",
+        "stamped",
+        "motion_blur"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Juliana Cavalcanti",
+          "predicted": "juliana cavalcanti",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "wrong",
+          "truth": "87345-MG",
+          "predicted": "87245-MG",
+          "score": 0.8,
+          "detail": "1 digit(s) off"
+        },
+        {
+          "field": "insurer",
+          "outcome": "missing",
+          "truth": "Plano Aurora",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "member_id",
+          "outcome": "missing",
+          "truth": "847186479153",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "exams",
+          "outcome": "wrong",
+          "truth": [
+            "Densitometria ossea"
+          ],
+          "predicted": [
+            "Denotometria ossa"
+          ],
+          "score": 0.0,
+          "detail": "P 0.00 R 0.00 F1 0.00 (0/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "wrong",
+          "truth": "2026-07-24",
+          "predicted": "26/09/2020",
+          "score": 0.0,
+          "detail": "2127d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12341.375505002361,
+      "tokens_in": 1305,
+      "tokens_out": 85,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"juliana cavalcanti\",\n    \"doctor_crm\": \"87245-MG\",\n    \"insurer\": null,\n    \"member_id\": null,\n    \"exams\": [\n        \"Denotometria ossa\"\n    ],\n    \"request_date\": \"26/09/2020\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0012",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "low_light",
+        "skewed",
+        "glare"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Otavio Rezende",
+          "predicted": "Otavio Rezende",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "23126-PR",
+          "predicted": "CRM 23126-PH",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Interclin",
+          "predicted": "Interclin",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "903024442138",
+          "predicted": "903024442138",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Doppler de carotidas"
+          ],
+          "predicted": [
+            "Doppler de carotidas"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-03-11",
+          "predicted": "11/03/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "wrong",
+          "truth": true,
+          "predicted": false,
+          "score": 0.0,
+          "detail": "expected True, got False"
+        }
+      ],
+      "latency_ms": 12571.996464001131,
+      "tokens_in": 1316,
+      "tokens_out": 102,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Otavio Rezende\",\n    \"doctor_crm\": \"CRM 23126-PH\",\n    \"insurer\": \"Interclin\",\n    \"member_id\": \"903024442138\",\n    \"exams\": [\n        \"Doppler de carotidas\"\n    ],\n    \"request_date\": \"11/03/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0013",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "partial",
+        "skewed",
+        "glare"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Juliana Sobral",
+          "predicted": "Juliana Sobral",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "21231-PR",
+          "predicted": "CRM 21231-PR",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Plano Aurora",
+          "predicted": "Plano Aurora",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "111103764",
+          "predicted": "111103764",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Ecocardiograma transtoracico"
+          ],
+          "predicted": [
+            "Ecocardiograma transtorácico"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-03-02",
+          "predicted": "02/03/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12652.757840001868,
+      "tokens_in": 1316,
+      "tokens_out": 100,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Juliana Sobral\",\n    \"doctor_crm\": \"CRM 21231-PR\",\n    \"insurer\": \"Plano Aurora\",\n    \"member_id\": \"111103764\",\n    \"exams\": [\n        \"Ecocardiograma transtorácico\"\n    ],\n    \"request_date\": \"02/03/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0014",
+      "tags": [
+        "printed",
+        "phone_photo",
+        "motion_blur"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Simone Peixoto",
+          "predicted": "Simone Peixoto",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "wrong",
+          "truth": "19221-MG",
+          "predicted": "CRM 09231-RRS",
+          "score": 0.6,
+          "detail": "2 digit(s) off"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Meridiano Saude",
+          "predicted": "Meridiano Saude",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": null,
+          "predicted": null,
+          "score": 1.0,
+          "detail": "both empty"
+        },
+        {
+          "field": "exams",
+          "outcome": "wrong",
+          "truth": [
+            "Ultrassom abdominal total",
+            "Ressonancia de joelho direito",
+            "Ultrassom de tireoide"
+          ],
+          "predicted": [
+            "Ultrasound abdominal total",
+            "Resonancia de joelho direito",
+            "Ultrasound de tireoide"
+          ],
+          "score": 0.0,
+          "detail": "P 0.00 R 0.00 F1 0.00 (0/3)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "wrong",
+          "truth": "2026-04-14",
+          "predicted": "14/06/2026",
+          "score": 0.0,
+          "detail": "61d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "wrong",
+          "truth": true,
+          "predicted": false,
+          "score": 0.0,
+          "detail": "expected True, got False"
+        }
+      ],
+      "latency_ms": 13018.87225700193,
+      "tokens_in": 1305,
+      "tokens_out": 110,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Simone Peixoto\",\n    \"doctor_crm\": \"CRM 09231-RRS\",\n    \"insurer\": \"Meridiano Saude\",\n    \"member_id\": null,\n    \"exams\": [\n        \"Ultrasound abdominal total\",\n        \"Resonancia de joelho direito\",\n        \"Ultrasound de tireoide\"\n    ],\n    \"request_date\": \"14/06/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0015",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "motion_blur"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Juliana Quintanilha",
+          "predicted": "Juliano Quintanilha",
+          "score": 0.9473684210526316,
+          "detail": "fuzzy match 0.947"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "25133-SP",
+          "predicted": "CRM 25133-SP",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "missing",
+          "truth": "Meridiano Saude",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "member_id",
+          "outcome": "wrong",
+          "truth": "300597239023708",
+          "predicted": "396597230023708",
+          "score": 0.8,
+          "detail": "3 digit(s) off"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Teste ergometrico"
+          ],
+          "predicted": [
+            "Teste ergométrico"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "wrong",
+          "truth": "2026-01-31",
+          "predicted": "31/01/2020",
+          "score": 0.0,
+          "detail": "2192d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 13027.411631002906,
+      "tokens_in": 1305,
+      "tokens_out": 101,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Juliano Quintanilha\",\n    \"doctor_crm\": \"CRM 25133-SP\",\n    \"insurer\": null,\n    \"member_id\": \"396597230023708\",\n    \"exams\": [\n        \"Teste ergométrico\"\n    ],\n    \"request_date\": \"31/01/2020\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0016",
+      "tags": [
+        "printed",
+        "phone_photo",
+        "rotated"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Vinicius Peixoto",
+          "predicted": "Vinicius Peixoto",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "23471-PR",
+          "predicted": "CRM 23471-PR",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Boavida Assistencia",
+          "predicted": "Boavida Assistencia",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "404780668301857",
+          "predicted": "404780668301857",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Ecocardiograma transtoracico",
+            "Ultrassom de tireoide"
+          ],
+          "predicted": [
+            "Ecocardiograma transtoracico",
+            "Ultrassom de tireoide"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (2/2)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-03-09",
+          "predicted": "09/03/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 13260.734673000115,
+      "tokens_in": 1305,
+      "tokens_out": 121,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Vinicius Peixoto\",\n    \"doctor_crm\": \"CRM 23471-PR\",\n    \"insurer\": \"Boavida Assistencia\",\n    \"member_id\": \"404780668301857\",\n    \"exams\": [\n        \"Ecocardiograma transtoracico\",\n        \"Ultrassom de tireoide\"\n    ],\n    \"request_date\": \"09/03/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0017",
+      "tags": [
+        "handwritten",
+        "scanned",
+        "motion_blur"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "wrong",
+          "truth": "Vinicius Bezerra",
+          "predicted": "VitÃ³ria Bezerra",
+          "score": 0.625,
+          "detail": "similarity 0.625"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "75660-SP",
+          "predicted": "75660-SP",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "missing",
+          "truth": "Interclin",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "member_id",
+          "outcome": "wrong",
+          "truth": "661913435299",
+          "predicted": "461913435299",
+          "score": 0.9166666666666666,
+          "detail": "1 digit(s) off"
+        },
+        {
+          "field": "exams",
+          "outcome": "wrong",
+          "truth": [
+            "Ultrassom de tireoide"
+          ],
+          "predicted": [
+            "x Ultrassom de tiroide"
+          ],
+          "score": 0.0,
+          "detail": "P 0.00 R 0.00 F1 0.00 (0/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "wrong",
+          "truth": "2026-07-19",
+          "predicted": "19/07/2025",
+          "score": 0.0,
+          "detail": "365d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": true,
+          "predicted": true,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 13047.996547997172,
+      "tokens_in": 1305,
+      "tokens_out": 100,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"VitÃ³ria Bezerra\",\n    \"doctor_crm\": \"75660-SP\",\n    \"insurer\": null,\n    \"member_id\": \"461913435299\",\n    \"exams\": [\n        \"x Ultrassom de tiroide\"\n    ],\n    \"request_date\": \"19/07/2025\",\n    \"urgent\": true\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0018",
+      "tags": [
+        "printed",
+        "scanned",
+        "motion_blur"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Marcelo Cavalcanti",
+          "predicted": "Marcelo Cavalcanti",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "75539-SC",
+          "predicted": "CRM 75539-SC",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Boavida Assistencia",
+          "predicted": "Boavista Assistencia",
+          "score": 0.9,
+          "detail": "fuzzy match 0.900"
+        },
+        {
+          "field": "member_id",
+          "outcome": "wrong",
+          "truth": "410706092118",
+          "predicted": "410758092118",
+          "score": 0.8333333333333334,
+          "detail": "2 digit(s) off"
+        },
+        {
+          "field": "exams",
+          "outcome": "wrong",
+          "truth": [
+            "Holter 24h"
+          ],
+          "predicted": [
+            "Holler 24h"
+          ],
+          "score": 0.0,
+          "detail": "P 0.00 R 0.00 F1 0.00 (0/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "wrong",
+          "truth": "2026-07-04",
+          "predicted": "06/07/2020",
+          "score": 0.0,
+          "detail": "2189d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 13047.002713999973,
+      "tokens_in": 1305,
+      "tokens_out": 103,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Marcelo Cavalcanti\",\n    \"doctor_crm\": \"CRM 75539-SC\",\n    \"insurer\": \"Boavista Assistencia\",\n    \"member_id\": \"410758092118\",\n    \"exams\": [\n        \"Holler 24h\"\n    ],\n    \"request_date\": \"06/07/2020\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0019",
+      "tags": [
+        "printed",
+        "scanned",
+        "stamped"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Leticia Sobral",
+          "predicted": "Leticia Sobral",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "30541-SC",
+          "predicted": "CRM 30541-SC",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Boavida Assistencia",
+          "predicted": "Boavida Assistencia",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "729396984",
+          "predicted": "729396984",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Ressonancia de coluna lombar"
+          ],
+          "predicted": [
+            "Ressonancia de coluna lombar"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-04-06",
+          "predicted": "06/04/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12807.4910059986,
+      "tokens_in": 1305,
+      "tokens_out": 103,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Leticia Sobral\",\n    \"doctor_crm\": \"CRM 30541-SC\",\n    \"insurer\": \"Boavida Assistencia\",\n    \"member_id\": \"729396984\",\n    \"exams\": [\n        \"Ressonancia de coluna lombar\"\n    ],\n    \"request_date\": \"06/04/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0020",
+      "tags": [
+        "printed",
+        "phone_photo",
+        "skewed",
+        "motion_blur"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Carolina Andrade",
+          "predicted": "Carolina Andrade",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "wrong",
+          "truth": "65662-PR",
+          "predicted": "CRM 65063 PR",
+          "score": 0.6,
+          "detail": "2 digit(s) off"
+        },
+        {
+          "field": "insurer",
+          "outcome": "missing",
+          "truth": "Vitalis Saude",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "member_id",
+          "outcome": "missing",
+          "truth": "639711903",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "exams",
+          "outcome": "wrong",
+          "truth": [
+            "Densitometria ossea",
+            "Ressonancia de coluna lombar"
+          ],
+          "predicted": [
+            "Densitometria óssea",
+            "Resonância de coluna lombar"
+          ],
+          "score": 0.5,
+          "detail": "P 0.50 R 0.50 F1 0.50 (1/2)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "wrong",
+          "truth": "2026-06-24",
+          "predicted": "24/06/2024",
+          "score": 0.0,
+          "detail": "730d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12839.134171998012,
+      "tokens_in": 1316,
+      "tokens_out": 98,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Carolina Andrade\",\n    \"doctor_crm\": \"CRM 65063 PR\",\n    \"insurer\": null,\n    \"member_id\": null,\n    \"exams\": [\n        \"Densitometria óssea\",\n        \"Resonância de coluna lombar\"\n    ],\n    \"request_date\": \"24/06/2024\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0021",
+      "tags": [
+        "handwritten",
+        "scanned",
+        "glare"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Priscila Sobral",
+          "predicted": "Priscila Sobral",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "35651-BA",
+          "predicted": "CRM 35651-BA",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": null,
+          "predicted": null,
+          "score": 1.0,
+          "detail": "both empty"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "097796791934",
+          "predicted": "097796791934",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Tomografia de torax"
+          ],
+          "predicted": [
+            "Tomografia de tórax"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-02-16",
+          "predicted": "16/02/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": true,
+          "predicted": true,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12743.073921999894,
+      "tokens_in": 1305,
+      "tokens_out": 98,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Priscila Sobral\",\n    \"doctor_crm\": \"CRM 35651-BA\",\n    \"insurer\": null,\n    \"member_id\": \"097796791934\",\n    \"exams\": [\n        \"Tomografia de tórax\"\n    ],\n    \"request_date\": \"16/02/2026\",\n    \"urgent\": true\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0022",
+      "tags": [
+        "handwritten",
+        "phone_photo"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Priscila Sobral",
+          "predicted": "Priscila Sobral",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "27836-PR",
+          "predicted": "CRM 27836-PR",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Meridiano Saude",
+          "predicted": "Meridiano Saude",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "199657410860",
+          "predicted": "199657410860",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Ecocardiograma transtoracico"
+          ],
+          "predicted": [
+            "Ecocardiograma transtoracico"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-05-24",
+          "predicted": "24/05/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12752.795380998577,
+      "tokens_in": 1305,
+      "tokens_out": 106,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Priscila Sobral\",\n    \"doctor_crm\": \"CRM 27836-PR\",\n    \"insurer\": \"Meridiano Saude\",\n    \"member_id\": \"199657410860\",\n    \"exams\": [\n        \"Ecocardiograma transtoracico\"\n    ],\n    \"request_date\": \"24/05/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0023",
+      "tags": [
+        "printed",
+        "scanned",
+        "motion_blur"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Leticia Sobral",
+          "predicted": "Letícia Sobral",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "wrong",
+          "truth": "16113-PR",
+          "predicted": "CRM 16513 PR",
+          "score": 0.8,
+          "detail": "1 digit(s) off"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Plano Aurora",
+          "predicted": "Plano Aurora",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "014020205",
+          "predicted": "014020205",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Ressonancia de joelho direito"
+          ],
+          "predicted": [
+            "Ressonância de joelho direito"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "wrong",
+          "truth": "2026-02-02",
+          "predicted": "02/02/2025",
+          "score": 0.0,
+          "detail": "365d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 6193.6467939995055,
+      "tokens_in": 1305,
+      "tokens_out": 98,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Letícia Sobral\",\n    \"doctor_crm\": \"CRM 16513 PR\",\n    \"insurer\": \"Plano Aurora\",\n    \"member_id\": \"014020205\",\n    \"exams\": [\n        \"Ressonância de joelho direito\"\n    ],\n    \"request_date\": \"02/02/2025\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0024",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "motion_blur"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "wrong",
+          "truth": "Rodrigo Sobral",
+          "predicted": "Rodrigo Rafael",
+          "score": 0.6428571428571428,
+          "detail": "similarity 0.643"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "wrong",
+          "truth": "90650-SP",
+          "predicted": "CRM 90456-SP",
+          "score": 0.6,
+          "detail": "2 digit(s) off"
+        },
+        {
+          "field": "insurer",
+          "outcome": "wrong",
+          "truth": "Meridiano Saude",
+          "predicted": "Mediante Saúde",
+          "score": 0.7333333333333334,
+          "detail": "similarity 0.733"
+        },
+        {
+          "field": "member_id",
+          "outcome": "wrong",
+          "truth": "200216151991",
+          "predicted": "209316555991",
+          "score": 0.6666666666666667,
+          "detail": "4 digit(s) off"
+        },
+        {
+          "field": "exams",
+          "outcome": "wrong",
+          "truth": [
+            "Raio-X de torax PA e perfil"
+          ],
+          "predicted": [
+            "Raios-X de tórax PA e perfil"
+          ],
+          "score": 0.0,
+          "detail": "P 0.00 R 0.00 F1 0.00 (0/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "wrong",
+          "truth": "2026-07-02",
+          "predicted": "02/07/2024",
+          "score": 0.0,
+          "detail": "730d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 4606.261960998381,
+      "tokens_in": 1305,
+      "tokens_out": 106,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Rodrigo Rafael\",\n    \"doctor_crm\": \"CRM 90456-SP\",\n    \"insurer\": \"Mediante Saúde\",\n    \"member_id\": \"209316555991\",\n    \"exams\": [\n        \"Raios-X de tórax PA e perfil\"\n    ],\n    \"request_date\": \"02/07/2024\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0025",
+      "tags": [
+        "printed",
+        "phone_photo",
+        "skewed"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Leonardo Peixoto",
+          "predicted": "Leonardo Peixoto",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "23240-PR",
+          "predicted": "CRM 23240-PR",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Vitalis Saude",
+          "predicted": "Vitalis Saude",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": null,
+          "predicted": null,
+          "score": 1.0,
+          "detail": "both empty"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Ressonancia de coluna lombar"
+          ],
+          "predicted": [
+            "Ressonancia de coluna lombar"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-03-19",
+          "predicted": "19/03/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 10389.742046998435,
+      "tokens_in": 1316,
+      "tokens_out": 94,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Leonardo Peixoto\",\n    \"doctor_crm\": \"CRM 23240-PR\",\n    \"insurer\": \"Vitalis Saude\",\n    \"member_id\": null,\n    \"exams\": [\n        \"Ressonancia de coluna lombar\"\n    ],\n    \"request_date\": \"19/03/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0026",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "partial",
+        "skewed",
+        "glare"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Leonardo Peixoto",
+          "predicted": "Leonardo Peixoto",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "66790-SC",
+          "predicted": "CRM 66790-SC",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Particular",
+          "predicted": "Particular",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "025904983",
+          "predicted": "025904983",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Ressonancia de joelho direito"
+          ],
+          "predicted": [
+            "Ressonancia de joelho direito"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-02-22",
+          "predicted": "22/02/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 10049.29542100217,
+      "tokens_in": 1316,
+      "tokens_out": 99,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Leonardo Peixoto\",\n    \"doctor_crm\": \"CRM 66790-SC\",\n    \"insurer\": \"Particular\",\n    \"member_id\": \"025904983\",\n    \"exams\": [\n        \"Ressonancia de joelho direito\"\n    ],\n    \"request_date\": \"22/02/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0027",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "low_light",
+        "motion_blur"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "wrong",
+          "truth": "Camila Siqueira",
+          "predicted": "Camila Preguiça",
+          "score": 0.6,
+          "detail": "similarity 0.600"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "wrong",
+          "truth": "14102-BA",
+          "predicted": "CRM 14152 BA",
+          "score": 0.8,
+          "detail": "1 digit(s) off"
+        },
+        {
+          "field": "insurer",
+          "outcome": "missing",
+          "truth": "Boavida Assistencia",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "member_id",
+          "outcome": "missing",
+          "truth": "251993443400",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "exams",
+          "outcome": "wrong",
+          "truth": [
+            "Holter 24h",
+            "Ressonancia de joelho direito"
+          ],
+          "predicted": [
+            "Exame de urina"
+          ],
+          "score": 0.0,
+          "detail": "P 0.00 R 0.00 F1 0.00 (0/2)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "wrong",
+          "truth": "2026-01-27",
+          "predicted": "27/01/2020",
+          "score": 0.0,
+          "detail": "2192d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12471.656880999944,
+      "tokens_in": 1305,
+      "tokens_out": 85,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Camila Preguiça\",\n    \"doctor_crm\": \"CRM 14152 BA\",\n    \"insurer\": null,\n    \"member_id\": null,\n    \"exams\": [\n        \"Exame de urina\"\n    ],\n    \"request_date\": \"27/01/2020\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0028",
+      "tags": [
+        "printed",
+        "phone_photo",
+        "skewed"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Henrique Cavalcanti",
+          "predicted": "Henrique Cavalcanti",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "83111-MG",
+          "predicted": "CRM 83111-MG",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Interclin",
+          "predicted": "Interclin",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "102685041",
+          "predicted": "102685041",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Ultrassom abdominal total"
+          ],
+          "predicted": [
+            "Ultrassom abdominal total"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-04-22",
+          "predicted": "22/04/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12569.353214999865,
+      "tokens_in": 1316,
+      "tokens_out": 97,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Henrique Cavalcanti\",\n    \"doctor_crm\": \"CRM 83111-MG\",\n    \"insurer\": \"Interclin\",\n    \"member_id\": \"102685041\",\n    \"exams\": [\n        \"Ultrassom abdominal total\"\n    ],\n    \"request_date\": \"22/04/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0029",
+      "tags": [
+        "printed",
+        "scanned",
+        "motion_blur"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "wrong",
+          "truth": "Patricia Ferrazzo",
+          "predicted": "Patricia Ferraz",
+          "score": 0.8823529411764706,
+          "detail": "similarity 0.882"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "wrong",
+          "truth": "97917-PR",
+          "predicted": "CRM 07917-MG",
+          "score": 0.8,
+          "detail": "1 digit(s) off"
+        },
+        {
+          "field": "insurer",
+          "outcome": "missing",
+          "truth": "Interclin",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "member_id",
+          "outcome": "missing",
+          "truth": "967461514403031",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "exams",
+          "outcome": "wrong",
+          "truth": [
+            "Ultrassom de tireoide"
+          ],
+          "predicted": [
+            "Ultrassom de Crecido"
+          ],
+          "score": 0.0,
+          "detail": "P 0.00 R 0.00 F1 0.00 (0/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "wrong",
+          "truth": "2026-03-21",
+          "predicted": "25/09/2006",
+          "score": 0.0,
+          "detail": "7117d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12395.697590000054,
+      "tokens_in": 1305,
+      "tokens_out": 87,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Patricia Ferraz\",\n    \"doctor_crm\": \"CRM 07917-MG\",\n    \"insurer\": null,\n    \"member_id\": null,\n    \"exams\": [\n        \"Ultrassom de Crecido\"\n    ],\n    \"request_date\": \"25/09/2006\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0030",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "low_light"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Leonardo Sobral",
+          "predicted": "Leonardo Sobral",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "16897-PR",
+          "predicted": "CRM 16897.PR",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "missing",
+          "truth": "Plano Aurora",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": null,
+          "predicted": null,
+          "score": 1.0,
+          "detail": "both empty"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Densitometria ossea"
+          ],
+          "predicted": [
+            "Densitometria óssea"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "wrong",
+          "truth": "2026-05-07",
+          "predicted": "07/05/2020",
+          "score": 0.0,
+          "detail": "2191d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12302.568089002307,
+      "tokens_in": 1305,
+      "tokens_out": 86,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Leonardo Sobral\",\n    \"doctor_crm\": \"CRM 16897.PR\",\n    \"insurer\": null,\n    \"member_id\": null,\n    \"exams\": [\n        \"Densitometria óssea\"\n    ],\n    \"request_date\": \"07/05/2020\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0031",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "low_light",
+        "motion_blur"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Patricia Camargo",
+          "predicted": "Patricia Camargo",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "missing",
+          "truth": "49559-MG",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "insurer",
+          "outcome": "wrong",
+          "truth": "Interclin",
+          "predicted": "SUS",
+          "score": 0.0,
+          "detail": "similarity 0.000"
+        },
+        {
+          "field": "member_id",
+          "outcome": "missing",
+          "truth": "561852474206",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "exams",
+          "outcome": "wrong",
+          "truth": [
+            "Ecocardiograma transtoracico",
+            "Doppler de carotidas"
+          ],
+          "predicted": [
+            "Resonância magnética de Abdome e pelve",
+            "Biopsia da cistite"
+          ],
+          "score": 0.0,
+          "detail": "P 0.00 R 0.00 F1 0.00 (0/2)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "missing",
+          "truth": "2026-03-23",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12068.492796999635,
+      "tokens_in": 1305,
+      "tokens_out": 83,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n  \"patient_name\": \"Patricia Camargo\",\n  \"doctor_crm\": null,\n  \"insurer\": \"SUS\",\n  \"member_id\": null,\n  \"exams\": [\n    \"Resonância magnética de Abdome e pelve\",\n    \"Biopsia da cistite\"\n  ],\n  \"request_date\": null,\n  \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0032",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "partial",
+        "skewed"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Patricia Tavares",
+          "predicted": "Patricia Tavares",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "18123-BA",
+          "predicted": "CRM 18123-BA",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Meridiano Saude",
+          "predicted": "Meridiano Saude",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": null,
+          "predicted": null,
+          "score": 1.0,
+          "detail": "both empty"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Teste ergometrico"
+          ],
+          "predicted": [
+            "Teste ergometrico"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-06-03",
+          "predicted": "03/06/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12060.270838999713,
+      "tokens_in": 1316,
+      "tokens_out": 90,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Patricia Tavares\",\n    \"doctor_crm\": \"CRM 18123-BA\",\n    \"insurer\": \"Meridiano Saude\",\n    \"member_id\": null,\n    \"exams\": [\n        \"Teste ergometrico\"\n    ],\n    \"request_date\": \"03/06/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0033",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "motion_blur"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "wrong",
+          "truth": "Leticia Cavalcanti",
+          "predicted": "Leticia Cipolletti",
+          "score": 0.6666666666666667,
+          "detail": "similarity 0.667"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "75260-MG",
+          "predicted": "CRM 75260-MG",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "wrong",
+          "truth": "Boavida Assistencia",
+          "predicted": "Bradesco Assistência",
+          "score": 0.7,
+          "detail": "similarity 0.700"
+        },
+        {
+          "field": "member_id",
+          "outcome": "wrong",
+          "truth": "977150576318344",
+          "predicted": "97715857831844",
+          "score": 0.8,
+          "detail": "3 digit(s) off"
+        },
+        {
+          "field": "exams",
+          "outcome": "wrong",
+          "truth": [
+            "Raio-X de torax PA e perfil"
+          ],
+          "predicted": [
+            "Rao X de tórax PA e perfil"
+          ],
+          "score": 0.0,
+          "detail": "P 0.00 R 0.00 F1 0.00 (0/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "missing",
+          "truth": "2026-05-18",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12453.958796999359,
+      "tokens_in": 1305,
+      "tokens_out": 102,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Leticia Cipolletti\",\n    \"doctor_crm\": \"CRM 75260-MG\",\n    \"insurer\": \"Bradesco Assistência\",\n    \"member_id\": \"97715857831844\",\n    \"exams\": [\n        \"Rao X de tórax PA e perfil\"\n    ],\n    \"request_date\": null,\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0034",
+      "tags": [
+        "printed",
+        "scanned"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Eduardo Monteiro",
+          "predicted": "Eduardo Monteiro",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "85952-MG",
+          "predicted": "CRM 85952-MG",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Boavida Assistencia",
+          "predicted": "Boavida Assistencia",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "010421444",
+          "predicted": "010421444",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Tomografia de torax"
+          ],
+          "predicted": [
+            "Tomografia de torax"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-04-08",
+          "predicted": "08/04/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12582.970256000408,
+      "tokens_in": 1305,
+      "tokens_out": 99,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Eduardo Monteiro\",\n    \"doctor_crm\": \"CRM 85952-MG\",\n    \"insurer\": \"Boavida Assistencia\",\n    \"member_id\": \"010421444\",\n    \"exams\": [\n        \"Tomografia de torax\"\n    ],\n    \"request_date\": \"08/04/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0035",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "low_light",
+        "skewed"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Anderson Cavalcanti",
+          "predicted": "Anderson Cavalcani",
+          "score": 0.9473684210526316,
+          "detail": "fuzzy match 0.947"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "44924-RS",
+          "predicted": "CRM 44924-RS",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Meridiano Saude",
+          "predicted": "Meridiano Saude",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "008189230342",
+          "predicted": "008189230342",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "wrong",
+          "truth": [
+            "Ultrassom de tireoide"
+          ],
+          "predicted": [
+            "Ultrassom do tiroide"
+          ],
+          "score": 0.0,
+          "detail": "P 0.00 R 0.00 F1 0.00 (0/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-02-23",
+          "predicted": "23/02/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12891.3735060014,
+      "tokens_in": 1316,
+      "tokens_out": 104,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Anderson Cavalcani\",\n    \"doctor_crm\": \"CRM 44924-RS\",\n    \"insurer\": \"Meridiano Saude\",\n    \"member_id\": \"008189230342\",\n    \"exams\": [\n        \"Ultrassom do tiroide\"\n    ],\n    \"request_date\": \"23/02/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0036",
+      "tags": [
+        "handwritten",
+        "scanned",
+        "faded"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Leonardo Cavalcanti",
+          "predicted": "Leonardo Cavalcanti",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "81845-SP",
+          "predicted": "CRM 81845-SP",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Interclin",
+          "predicted": "Interclin",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "178424533",
+          "predicted": "178424533",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Raio-X de torax PA e perfil"
+          ],
+          "predicted": [
+            "Ráio-X de tórax PA e perfil"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-06-15",
+          "predicted": "15/06/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12770.981339999707,
+      "tokens_in": 1305,
+      "tokens_out": 102,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Leonardo Cavalcanti\",\n    \"doctor_crm\": \"CRM 81845-SP\",\n    \"insurer\": \"Interclin\",\n    \"member_id\": \"178424533\",\n    \"exams\": [\n        \"Ráio-X de tórax PA e perfil\"\n    ],\n    \"request_date\": \"15/06/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0037",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "partial",
+        "skewed"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Henrique Camargo",
+          "predicted": "Henrique Camargo",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "37573-BA",
+          "predicted": "CRM 37573-BA",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Boavida Assistencia",
+          "predicted": "Boavida Assistencia",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "252869211",
+          "predicted": "252869211",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Ultrassom abdominal total"
+          ],
+          "predicted": [
+            "Ultrassom abdominal total"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-05-19",
+          "predicted": "19/05/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12857.113048001338,
+      "tokens_in": 1316,
+      "tokens_out": 99,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Henrique Camargo\",\n    \"doctor_crm\": \"CRM 37573-BA\",\n    \"insurer\": \"Boavida Assistencia\",\n    \"member_id\": \"252869211\",\n    \"exams\": [\n        \"Ultrassom abdominal total\"\n    ],\n    \"request_date\": \"19/05/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0038",
+      "tags": [
+        "handwritten",
+        "scanned"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Eduardo Rezende",
+          "predicted": "Eduardo Rezende",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "98075-SP",
+          "predicted": "CRM 98075-SP",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Vitalis Saude",
+          "predicted": "Vitalis Saude",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "568557519513420",
+          "predicted": "568557519513420",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Mamografia bilateral",
+            "Raio-X de torax PA e perfil",
+            "Holter 24h"
+          ],
+          "predicted": [
+            "Mamografia bilateral",
+            "Raio-X de torax PA e perfil",
+            "Holter 24h"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (3/3)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-07-12",
+          "predicted": "12/07/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 13112.708548000228,
+      "tokens_in": 1305,
+      "tokens_out": 126,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Eduardo Rezende\",\n    \"doctor_crm\": \"CRM 98075-SP\",\n    \"insurer\": \"Vitalis Saude\",\n    \"member_id\": \"568557519513420\",\n    \"exams\": [\n        \"Mamografia bilateral\",\n        \"Raio-X de torax PA e perfil\",\n        \"Holter 24h\"\n    ],\n    \"request_date\": \"12/07/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0039",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "low_light"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Thiago Marchetti",
+          "predicted": "Thiago Marchetti",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "63512-MG",
+          "predicted": "CRM 63512-MG",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": null,
+          "predicted": null,
+          "score": 1.0,
+          "detail": "both empty"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "985447209",
+          "predicted": "985447209",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Mamografia bilateral"
+          ],
+          "predicted": [
+            "Mamografia bilateral"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-02-10",
+          "predicted": "10/02/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 13121.974006997334,
+      "tokens_in": 1305,
+      "tokens_out": 93,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Thiago Marchetti\",\n    \"doctor_crm\": \"CRM 63512-MG\",\n    \"insurer\": null,\n    \"member_id\": \"985447209\",\n    \"exams\": [\n        \"Mamografia bilateral\"\n    ],\n    \"request_date\": \"10/02/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0040",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "skewed"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Priscila Andrade",
+          "predicted": "Priscila Andrade",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "94434-PR",
+          "predicted": "CRM 94434-PR",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Interclin",
+          "predicted": "Interclin",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": null,
+          "predicted": null,
+          "score": 1.0,
+          "detail": "both empty"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Ecocardiograma transtoracico",
+            "Tomografia de torax"
+          ],
+          "predicted": [
+            "Ecocardiograma transtoracico",
+            "Tomografia de torax"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (2/2)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-03-05",
+          "predicted": "05/03/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 13140.780465000717,
+      "tokens_in": 1316,
+      "tokens_out": 99,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Priscila Andrade\",\n    \"doctor_crm\": \"CRM 94434-PR\",\n    \"insurer\": \"Interclin\",\n    \"member_id\": null,\n    \"exams\": [\n        \"Ecocardiograma transtoracico\",\n        \"Tomografia de torax\"\n    ],\n    \"request_date\": \"05/03/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0041",
+      "tags": [
+        "printed",
+        "scanned",
+        "glare"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Juliana Sobral",
+          "predicted": "Juliana Sobral",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "56476-RS",
+          "predicted": "CRM 56476-RS",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Vitalis Saude",
+          "predicted": "Vitalis Saude",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "782835129778",
+          "predicted": "782835129778",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Densitometria ossea"
+          ],
+          "predicted": [
+            "Densitometria ossea"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-01-08",
+          "predicted": "08/01/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12773.281713998585,
+      "tokens_in": 1305,
+      "tokens_out": 103,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Juliana Sobral\",\n    \"doctor_crm\": \"CRM 56476-RS\",\n    \"insurer\": \"Vitalis Saude\",\n    \"member_id\": \"782835129778\",\n    \"exams\": [\n        \"Densitometria ossea\"\n    ],\n    \"request_date\": \"08/01/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0042",
+      "tags": [
+        "printed",
+        "phone_photo",
+        "glare"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Rafael Peixoto",
+          "predicted": "Rafael Peixoto",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "26687-PR",
+          "predicted": "CRM 26687-PR",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Interclin",
+          "predicted": "Interclin",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "447136254638",
+          "predicted": "447136254638",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Tomografia de torax"
+          ],
+          "predicted": [
+            "Tomografia de torax"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-06-03",
+          "predicted": "03/06/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12744.37021400081,
+      "tokens_in": 1305,
+      "tokens_out": 100,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Rafael Peixoto\",\n    \"doctor_crm\": \"CRM 26687-PR\",\n    \"insurer\": \"Interclin\",\n    \"member_id\": \"447136254638\",\n    \"exams\": [\n        \"Tomografia de torax\"\n    ],\n    \"request_date\": \"03/06/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0043",
+      "tags": [
+        "handwritten",
+        "scanned",
+        "faded"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Marcelo Camargo",
+          "predicted": "Marcelo Camargo",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "55821-MG",
+          "predicted": "CRM 55821-MG",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Vitalis Saude",
+          "predicted": "Vitalis Saude",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "981090460832",
+          "predicted": "981090460832",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Teste ergometrico",
+            "Ressonancia de joelho direito",
+            "Tomografia de torax"
+          ],
+          "predicted": [
+            "Teste ergometrico",
+            "Ressonancia de joelho direito",
+            "Tomografia de torax"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (3/3)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-02-12",
+          "predicted": "12/02/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 13093.741548000253,
+      "tokens_in": 1305,
+      "tokens_out": 121,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Marcelo Camargo\",\n    \"doctor_crm\": \"CRM 55821-MG\",\n    \"insurer\": \"Vitalis Saude\",\n    \"member_id\": \"981090460832\",\n    \"exams\": [\n        \"Teste ergometrico\",\n        \"Ressonancia de joelho direito\",\n        \"Tomografia de torax\"\n    ],\n    \"request_date\": \"12/02/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0044",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "low_light"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Henrique Cavalcanti",
+          "predicted": "Henrique Cavalcanti",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "62315-BA",
+          "predicted": "CRM 62315-BA",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "missing",
+          "truth": "Plano Aurora",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "member_id",
+          "outcome": "wrong",
+          "truth": "554250927219972",
+          "predicted": "564250927219972",
+          "score": 0.9333333333333333,
+          "detail": "1 digit(s) off"
+        },
+        {
+          "field": "exams",
+          "outcome": "wrong",
+          "truth": [
+            "Ultrassom de tireoide",
+            "Densitometria ossea"
+          ],
+          "predicted": [
+            "Ultrassom de tireoide",
+            "Densitometria ossen"
+          ],
+          "score": 0.5,
+          "detail": "P 0.50 R 0.50 F1 0.50 (1/2)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "wrong",
+          "truth": "2026-05-22",
+          "predicted": "22/05/2020",
+          "score": 0.0,
+          "detail": "2191d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 13201.251255999523,
+      "tokens_in": 1305,
+      "tokens_out": 113,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Henrique Cavalcanti\",\n    \"doctor_crm\": \"CRM 62315-BA\",\n    \"insurer\": null,\n    \"member_id\": \"564250927219972\",\n    \"exams\": [\n        \"Ultrassom de tireoide\",\n        \"Densitometria ossen\"\n    ],\n    \"request_date\": \"22/05/2020\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0045",
+      "tags": [
+        "handwritten",
+        "scanned",
+        "glare"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Bianca Bittencourt",
+          "predicted": "Bianca Bittencourt",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "54093-SC",
+          "predicted": "CRM 54093-SC",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Meridiano Saude",
+          "predicted": "Meridiano Saude",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "332129502902784",
+          "predicted": "332129502902784",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "wrong",
+          "truth": [
+            "Ultrassom abdominal total",
+            "Raio-X de torax PA e perfil",
+            "Teste ergometrico"
+          ],
+          "predicted": [
+            "Ultrassom abdominal total",
+            "Ralo-X de torax PA e perfil",
+            "Teste ergometrico"
+          ],
+          "score": 0.6666666666666666,
+          "detail": "P 0.67 R 0.67 F1 0.67 (2/3)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-05-12",
+          "predicted": "12/05/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": true,
+          "predicted": true,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 13719.757382001262,
+      "tokens_in": 1305,
+      "tokens_out": 128,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Bianca Bittencourt\",\n    \"doctor_crm\": \"CRM 54093-SC\",\n    \"insurer\": \"Meridiano Saude\",\n    \"member_id\": \"332129502902784\",\n    \"exams\": [\n        \"Ultrassom abdominal total\",\n        \"Ralo-X de torax PA e perfil\",\n        \"Teste ergometrico\"\n    ],\n    \"request_date\": \"12/05/2026\",\n    \"urgent\": true\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0046",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "glare"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Gustavo Rabelo",
+          "predicted": "Gustavo Rabelo",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "76316-RS",
+          "predicted": "CRM 76316-RS",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Interclin",
+          "predicted": "Interclin",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "884204693",
+          "predicted": "884204693",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Mamografia bilateral"
+          ],
+          "predicted": [
+            "Mamografia bilateral"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-01-01",
+          "predicted": "01/01/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 13257.985173000634,
+      "tokens_in": 1305,
+      "tokens_out": 96,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Gustavo Rabelo\",\n    \"doctor_crm\": \"CRM 76316-RS\",\n    \"insurer\": \"Interclin\",\n    \"member_id\": \"884204693\",\n    \"exams\": [\n        \"Mamografia bilateral\"\n    ],\n    \"request_date\": \"01/01/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0047",
+      "tags": [
+        "printed",
+        "phone_photo",
+        "motion_blur"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "wrong",
+          "truth": "Juliana Nogueira",
+          "predicted": "juliane floqueira",
+          "score": 0.7647058823529411,
+          "detail": "similarity 0.765"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "wrong",
+          "truth": "29388-BA",
+          "predicted": "CRM 29385 BA",
+          "score": 0.8,
+          "detail": "1 digit(s) off"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Vitalis Saude",
+          "predicted": "Vitalis Saude",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": null,
+          "predicted": null,
+          "score": 1.0,
+          "detail": "both empty"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Holter 24h"
+          ],
+          "predicted": [
+            "Holter 24h"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-07-17",
+          "predicted": "17/07/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12947.441588999936,
+      "tokens_in": 1305,
+      "tokens_out": 91,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"juliane floqueira\",\n    \"doctor_crm\": \"CRM 29385 BA\",\n    \"insurer\": \"Vitalis Saude\",\n    \"member_id\": null,\n    \"exams\": [\n        \"Holter 24h\"\n    ],\n    \"request_date\": \"17/07/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0048",
+      "tags": [
+        "printed",
+        "scanned",
+        "motion_blur"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Fernanda Quintanilha",
+          "predicted": "Fernanda Quintanilha",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "missing",
+          "truth": "72691-PR",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "insurer",
+          "outcome": "missing",
+          "truth": "Particular",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": null,
+          "predicted": null,
+          "score": 1.0,
+          "detail": "both empty"
+        },
+        {
+          "field": "exams",
+          "outcome": "wrong",
+          "truth": [
+            "Ressonancia de coluna lombar"
+          ],
+          "predicted": [
+            "Reconocencia de coluna lombar"
+          ],
+          "score": 0.0,
+          "detail": "P 0.00 R 0.00 F1 0.00 (0/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "wrong",
+          "truth": "2026-02-23",
+          "predicted": "28/03/2020",
+          "score": 0.0,
+          "detail": "2158d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12308.742130997416,
+      "tokens_in": 1305,
+      "tokens_out": 82,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Fernanda Quintanilha\",\n    \"doctor_crm\": null,\n    \"insurer\": null,\n    \"member_id\": null,\n    \"exams\": [\n        \"Reconocencia de coluna lombar\"\n    ],\n    \"request_date\": \"28/03/2020\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0049",
+      "tags": [
+        "printed",
+        "scanned",
+        "glare"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Rafael Sobral",
+          "predicted": "Rafael Sobral",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "26301-RS",
+          "predicted": "CRM 26301-RS",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Plano Aurora",
+          "predicted": "Plano Aurora",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "153598811986",
+          "predicted": "153598811986",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Densitometria ossea",
+            "Doppler de carotidas",
+            "Holter 24h"
+          ],
+          "predicted": [
+            "Densitometria ossea",
+            "Doppler de carotidas",
+            "Holter 24h"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (3/3)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-07-17",
+          "predicted": "17/07/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12694.240047996573,
+      "tokens_in": 1305,
+      "tokens_out": 121,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Rafael Sobral\",\n    \"doctor_crm\": \"CRM 26301-RS\",\n    \"insurer\": \"Plano Aurora\",\n    \"member_id\": \"153598811986\",\n    \"exams\": [\n        \"Densitometria ossea\",\n        \"Doppler de carotidas\",\n        \"Holter 24h\"\n    ],\n    \"request_date\": \"17/07/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0050",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "low_light"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Camila Quintanilha",
+          "predicted": "Camila Quintanilha",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "64802-RS",
+          "predicted": "CRM 64802-RS",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Particular",
+          "predicted": "Particular",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "387584219",
+          "predicted": "387584219",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Ressonancia de coluna lombar"
+          ],
+          "predicted": [
+            "Ressonancia de coluna lombar"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-03-01",
+          "predicted": "01/03/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12835.96033899812,
+      "tokens_in": 1305,
+      "tokens_out": 100,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Camila Quintanilha\",\n    \"doctor_crm\": \"CRM 64802-RS\",\n    \"insurer\": \"Particular\",\n    \"member_id\": \"387584219\",\n    \"exams\": [\n        \"Ressonancia de coluna lombar\"\n    ],\n    \"request_date\": \"01/03/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0051",
+      "tags": [
+        "handwritten",
+        "phone_photo"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Fernanda Bezerra",
+          "predicted": "Fernanda Bezerra",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "11334-MG",
+          "predicted": "CRM 11334-MG",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": null,
+          "predicted": null,
+          "score": 1.0,
+          "detail": "both empty"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "583480621",
+          "predicted": "583480621",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Ultrassom abdominal total"
+          ],
+          "predicted": [
+            "Ultrassom abdominal total"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-06-08",
+          "predicted": "08/06/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12869.066630999441,
+      "tokens_in": 1305,
+      "tokens_out": 95,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Fernanda Bezerra\",\n    \"doctor_crm\": \"CRM 11334-MG\",\n    \"insurer\": null,\n    \"member_id\": \"583480621\",\n    \"exams\": [\n        \"Ultrassom abdominal total\"\n    ],\n    \"request_date\": \"08/06/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0052",
+      "tags": [
+        "printed",
+        "scanned",
+        "glare"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Rafael Tavares",
+          "predicted": "Rafael Tavares",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "55676-SP",
+          "predicted": "CRM 55676-SP",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Interclin",
+          "predicted": "Interclin",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "635714431",
+          "predicted": "635714431",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Teste ergometrico"
+          ],
+          "predicted": [
+            "Teste ergometrico"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-06-18",
+          "predicted": "18/06/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12516.031839000789,
+      "tokens_in": 1305,
+      "tokens_out": 97,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Rafael Tavares\",\n    \"doctor_crm\": \"CRM 55676-SP\",\n    \"insurer\": \"Interclin\",\n    \"member_id\": \"635714431\",\n    \"exams\": [\n        \"Teste ergometrico\"\n    ],\n    \"request_date\": \"18/06/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0053",
+      "tags": [
+        "handwritten",
+        "scanned"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Marcelo Bandeira",
+          "predicted": "Marcelo Bandeira",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "25970-BA",
+          "predicted": "CRM 25970-BA",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Plano Aurora",
+          "predicted": "Plano Aurora",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "522332787806775",
+          "predicted": "522332787806775",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Doppler de carotidas"
+          ],
+          "predicted": [
+            "Doppler de carotidas"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-03-09",
+          "predicted": "09/03/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12687.520256000425,
+      "tokens_in": 1305,
+      "tokens_out": 106,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Marcelo Bandeira\",\n    \"doctor_crm\": \"CRM 25970-BA\",\n    \"insurer\": \"Plano Aurora\",\n    \"member_id\": \"522332787806775\",\n    \"exams\": [\n        \"Doppler de carotidas\"\n    ],\n    \"request_date\": \"09/03/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0054",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "skewed",
+        "glare"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Priscila Siqueira",
+          "predicted": "Priscila Siqueira",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "49923-RS",
+          "predicted": "CRM 49923-RS",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Meridiano Saude",
+          "predicted": "Meridiano Saude",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "703838382160349",
+          "predicted": "703838382160349",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Holter 24h"
+          ],
+          "predicted": [
+            "Holter 24h"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-07-13",
+          "predicted": "13/07/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12903.95800600163,
+      "tokens_in": 1316,
+      "tokens_out": 107,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Priscila Siqueira\",\n    \"doctor_crm\": \"CRM 49923-RS\",\n    \"insurer\": \"Meridiano Saude\",\n    \"member_id\": \"703838382160349\",\n    \"exams\": [\n        \"Holter 24h\"\n    ],\n    \"request_date\": \"13/07/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0055",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "low_light",
+        "glare"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "wrong",
+          "truth": "Patricia Rabelo",
+          "predicted": "Patrícia Ribeiro",
+          "score": 0.8125,
+          "detail": "similarity 0.812"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "wrong",
+          "truth": "35614-MG",
+          "predicted": "107261019",
+          "score": 0.2222222222222222,
+          "detail": "7 digit(s) off"
+        },
+        {
+          "field": "insurer",
+          "outcome": "missing",
+          "truth": "Meridiano Saude",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "member_id",
+          "outcome": "missing",
+          "truth": "107203019",
+          "predicted": null,
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "exams",
+          "outcome": "missing",
+          "truth": [
+            "Holter 24h"
+          ],
+          "predicted": [],
+          "score": 0.0,
+          "detail": "empty value returned"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-05-29",
+          "predicted": "29/05/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12583.548423001048,
+      "tokens_in": 1305,
+      "tokens_out": 76,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Patrícia Ribeiro\",\n    \"doctor_crm\": \"107261019\",\n    \"insurer\": null,\n    \"member_id\": null,\n    \"exams\": [],\n    \"request_date\": \"29/05/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0056",
+      "tags": [
+        "handwritten",
+        "scanned"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Vanessa Ferrazzo",
+          "predicted": "Vanessa Ferrazzo",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "88248-BA",
+          "predicted": "CRM 88248-BA",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Vitalis Saude",
+          "predicted": "Vitalis Saude",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "095513070964255",
+          "predicted": "095513070964255",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Raio-X de torax PA e perfil",
+            "Mamografia bilateral"
+          ],
+          "predicted": [
+            "Raio-X de torax PA e perfil",
+            "Mamografia bilateral"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (2/2)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-05-19",
+          "predicted": "19/05/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 12688.341006003611,
+      "tokens_in": 1305,
+      "tokens_out": 115,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Vanessa Ferrazzo\",\n    \"doctor_crm\": \"CRM 88248-BA\",\n    \"insurer\": \"Vitalis Saude\",\n    \"member_id\": \"095513070964255\",\n    \"exams\": [\n        \"Raio-X de torax PA e perfil\",\n        \"Mamografia bilateral\"\n    ],\n    \"request_date\": \"19/05/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0057",
+      "tags": [
+        "printed",
+        "scanned"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Carolina Camargo",
+          "predicted": "Carolina Camargo",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "66152-PR",
+          "predicted": "CRM 66152-PR",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Vitalis Saude",
+          "predicted": "Vitalis Saude",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "071471959725591",
+          "predicted": "071471959725591",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Raio-X de torax PA e perfil",
+            "Ressonancia de joelho direito",
+            "Teste ergometrico"
+          ],
+          "predicted": [
+            "Raio-X de torax PA e perfil",
+            "Ressonancia de joelho direito",
+            "Teste ergometrico"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (3/3)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-02-17",
+          "predicted": "17/02/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 13013.49371499964,
+      "tokens_in": 1305,
+      "tokens_out": 127,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Carolina Camargo\",\n    \"doctor_crm\": \"CRM 66152-PR\",\n    \"insurer\": \"Vitalis Saude\",\n    \"member_id\": \"071471959725591\",\n    \"exams\": [\n        \"Raio-X de torax PA e perfil\",\n        \"Ressonancia de joelho direito\",\n        \"Teste ergometrico\"\n    ],\n    \"request_date\": \"17/02/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0058",
+      "tags": [
+        "printed",
+        "phone_photo",
+        "glare"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Juliana Vasconcelos",
+          "predicted": "Juliana Vasconcelos",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "24888-SC",
+          "predicted": "CRM 24888-SC",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Meridiano Saude",
+          "predicted": "Meridiano Saude",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "781247481182692",
+          "predicted": "781247481182692",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Holter 24h"
+          ],
+          "predicted": [
+            "Holter 24h"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-05-14",
+          "predicted": "14/05/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": true,
+          "predicted": true,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 13498.675340000773,
+      "tokens_in": 1305,
+      "tokens_out": 107,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Juliana Vasconcelos\",\n    \"doctor_crm\": \"CRM 24888-SC\",\n    \"insurer\": \"Meridiano Saude\",\n    \"member_id\": \"781247481182692\",\n    \"exams\": [\n        \"Holter 24h\"\n    ],\n    \"request_date\": \"14/05/2026\",\n    \"urgent\": true\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0059",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "glare"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Priscila Nogueira",
+          "predicted": "Priscila Nogueira",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "34212-RS",
+          "predicted": "CRM 34212-RS",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Meridiano Saude",
+          "predicted": "Meridiano Saude",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "correct",
+          "truth": "225469957738",
+          "predicted": "225469957738",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Holter 24h"
+          ],
+          "predicted": [
+            "Holter 24h"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (1/1)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-07-22",
+          "predicted": "22/07/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": true,
+          "predicted": true,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 13254.468464998354,
+      "tokens_in": 1305,
+      "tokens_out": 104,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Priscila Nogueira\",\n    \"doctor_crm\": \"CRM 34212-RS\",\n    \"insurer\": \"Meridiano Saude\",\n    \"member_id\": \"225469957738\",\n    \"exams\": [\n        \"Holter 24h\"\n    ],\n    \"request_date\": \"22/07/2026\",\n    \"urgent\": true\n}",
+      "cached": true
+    },
+    {
+      "case_id": "0060",
+      "tags": [
+        "handwritten",
+        "phone_photo",
+        "skewed"
+      ],
+      "fields": [
+        {
+          "field": "patient_name",
+          "outcome": "correct",
+          "truth": "Priscila Rabelo",
+          "predicted": "Priscila Rabelo",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "doctor_crm",
+          "outcome": "correct",
+          "truth": "74663-BA",
+          "predicted": "CRM 74663-BA",
+          "score": 1.0,
+          "detail": "digits match"
+        },
+        {
+          "field": "insurer",
+          "outcome": "correct",
+          "truth": "Vitalis Saude",
+          "predicted": "Vitalis Saude",
+          "score": 1.0,
+          "detail": "normalized match"
+        },
+        {
+          "field": "member_id",
+          "outcome": "wrong",
+          "truth": "614674228674",
+          "predicted": "61467428674",
+          "score": 0.9166666666666666,
+          "detail": "1 digit(s) off"
+        },
+        {
+          "field": "exams",
+          "outcome": "correct",
+          "truth": [
+            "Doppler de carotidas",
+            "Ecocardiograma transtoracico"
+          ],
+          "predicted": [
+            "Doppler de carotidas",
+            "Ecocardiograma transtoracico"
+          ],
+          "score": 1.0,
+          "detail": "set match · P 1.00 R 1.00 F1 1.00 (2/2)"
+        },
+        {
+          "field": "request_date",
+          "outcome": "correct",
+          "truth": "2026-01-04",
+          "predicted": "04/01/2026",
+          "score": 1.0,
+          "detail": "0d apart"
+        },
+        {
+          "field": "urgent",
+          "outcome": "correct",
+          "truth": false,
+          "predicted": false,
+          "score": 1.0,
+          "detail": "bool match"
+        }
+      ],
+      "latency_ms": 2171.7905010009417,
+      "tokens_in": 1316,
+      "tokens_out": 116,
+      "cost_usd": 0.0,
+      "error": "",
+      "raw_output": "{\n    \"patient_name\": \"Priscila Rabelo\",\n    \"doctor_crm\": \"CRM 74663-BA\",\n    \"insurer\": \"Vitalis Saude\",\n    \"member_id\": \"61467428674\",\n    \"exams\": [\n        \"Doppler de carotidas\",\n        \"Ecocardiograma transtoracico\"\n    ],\n    \"request_date\": \"04/01/2026\",\n    \"urgent\": false\n}",
+      "cached": true
+    }
+  ]
+}

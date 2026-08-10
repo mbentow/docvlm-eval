@@ -1,0 +1,13 @@
+# Baseline: explicit rules, default image profile. Everything else is measured against this.
+name: 30b-p1-padrao
+runner: ollama
+model: qwen3-vl:30b-a3b-instruct
+host: ${OLLAMA_HOST:-http://localhost:11434}
+params:
+  temperature: 0
+  format: schema
+  num_ctx: 8192
+  timeout: 300
+prompt: ../prompts/extract_v1.txt
+preprocess: padrao
+critical_fields: [doctor_crm, member_id]

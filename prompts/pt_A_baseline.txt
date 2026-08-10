@@ -1,0 +1,15 @@
+Você está lendo um pedido médico digitalizado.
+
+Extraia os campos abaixo em JSON.
+
+Regras:
+1. Copie os valores exatamente como aparecem no papel. Não corrija ortografia,
+   não expanda abreviações, não traduza.
+2. Se um campo não estiver no documento, ou você não conseguir ler, devolva null.
+   Não invente.
+3. Em `procedimentos`, liste apenas os exames explicitamente solicitados ou
+   marcados.
+4. Devolva apenas o objeto JSON.
+
+Campos:
+{fields}

@@ -21,6 +21,8 @@ from rich.console import Console
 from rich.table import Table
 
 from docvlm_eval.metrics import RunDiff, RunMetrics
+from docvlm_eval.selective import render as render_selective
+from docvlm_eval.selective import selective_report
 
 WARN_HALLUCINATION = 0.01
 WARN_ACCURACY_GAP = 0.10
@@ -31,7 +33,7 @@ WARN_ACCURACY_GAP = 0.10
 # --------------------------------------------------------------------------- #
 
 
-def print_run(metrics: RunMetrics, console: Console | None = None) -> None:
+def print_run(metrics: RunMetrics, console: Console | None = None, cases=None) -> None:
     console = console or Console()
     console.print()
     console.print(
@@ -115,7 +117,37 @@ def print_run(metrics: RunMetrics, console: Console | None = None) -> None:
         )
     if metrics.n_refused:
         console.print(f"[yellow]{metrics.n_refused} case(s) produced no usable output[/yellow]")
+    if cases:
+        _print_selective(cases, console)
     console.print()
+
+
+def _print_selective(cases, console: Console) -> None:
+    """The number that decides the product: accuracy left on the automated slice."""
+    rep = selective_report(cases)
+    if not rep.n_cases:
+        return
+    table = Table(show_edge=False, header_style="bold", pad_edge=False)
+    table.add_column("AUTOMATE", justify="right")
+    table.add_column("ACC", justify="right")
+    table.add_column("ERR ESCAPING", justify="right")
+    table.add_column("HALL", justify="right")
+    for point in rep.operating_points:
+        table.add_row(
+            f"{point.coverage * 100:.0f}%",
+            f"{point.accuracy:.3f}",
+            f"{point.risk * 100:.1f}%",
+            f"{point.hallucination_rate * 100:.2f}%",
+        )
+    console.print()
+    console.print(table)
+    note = (
+        f"[dim]AURC {rep.aurc:.4f} vs random {rep.aurc_random:.4f} — "
+        f"ranking gain {rep.ranking_gain * 100:.0f}%[/dim]"
+    )
+    if rep.ranking_gain < 0.05:
+        note += "  [yellow]confidence ranks no better than chance[/yellow]"
+    console.print(note)
 
 
 def print_diff(diff: RunDiff, console: Console | None = None) -> None:
@@ -231,6 +263,12 @@ def _signed(value: float, pct: bool = False) -> str:
 # --------------------------------------------------------------------------- #
 # Markdown
 # --------------------------------------------------------------------------- #
+
+
+def markdown_selective(cases, confidence_field: str | None = None) -> str:
+    """The coverage/accuracy block. Kept separate so `report` can emit it for a
+    stored run without recomputing anything else."""
+    return render_selective(selective_report(cases, confidence_field=confidence_field))
 
 
 def markdown_run(metrics: RunMetrics) -> str:
@@ -473,7 +511,7 @@ business: a document with one wrong field still needs a human.</div>
 
 
 def write_reports(
-    metrics: RunMetrics, out_dir: str | Path, *, stem: str | None = None
+    metrics: RunMetrics, out_dir: str | Path, *, stem: str | None = None, cases=None
 ) -> dict[str, Path]:
     """Write ``.md``, ``.html`` and ``.json`` for one run."""
     out = Path(out_dir)
@@ -484,7 +522,10 @@ def write_reports(
         "html": out / f"{stem}.html",
         "json": out / f"{stem}.metrics.json",
     }
-    paths["markdown"].write_text(markdown_run(metrics), encoding="utf-8")
+    md = markdown_run(metrics)
+    if cases:
+        md += "\n" + markdown_selective(cases)
+    paths["markdown"].write_text(md, encoding="utf-8")
     paths["html"].write_text(html_run(metrics), encoding="utf-8")
     paths["json"].write_text(json.dumps(metrics.to_dict(), indent=2, default=str), encoding="utf-8")
     return paths

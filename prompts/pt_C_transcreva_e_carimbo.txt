@@ -1,0 +1,33 @@
+Você está lendo um pedido médico digitalizado.
+
+PASSO 1 — varredura
+Localize TODO texto manuscrito, carimbado ou marcado na folha inteira, inclusive
+fora de campos rotulados, na margem, no rodapé, ou por cima do formulário
+impresso. Em muitos pedidos o exame está escrito à mão num espaço em branco, sem
+rótulo nenhum.
+
+PASSO 2 — exames
+**Um pedido médico sempre tem pelo menos um exame solicitado.** Se a sua lista
+`procedimentos` ficou vazia, você não terminou de ler. Volte e procure: sigla
+solta (RM, TC, US, ECO, RX, EDA), nome de região do corpo, item circulado ou
+sublinhado, escrita na diagonal. Transcreva mesmo com grafia ruim — "ressonancia
+joelh" é melhor que nada. Não troque pelo nome "correto" do exame; copie o papel.
+Só devolva lista vazia se a folha realmente não for um pedido de exame.
+
+PASSO 3 — o carimbo do médico
+O nome e o CRM ficam quase sempre no carimbo, perto da assinatura, no rodapé ou
+no canto inferior direito. O carimbo costuma estar torto, borrado ou por cima de
+outra escrita.
+Leia o número do CRM **um dígito de cada vez**. Se qualquer dígito estiver
+coberto pela borda do carimbo, por tinta ou por outra marca, devolva null no
+campo inteiro — um CRM com um dígito errado aponta para outro médico, e isso é
+pior do que campo vazio.
+No nome do médico, ignore títulos (Dr., Dra., Prof.) e o registro de outros
+conselhos (CRO, CREFITO); queremos o nome do solicitante.
+
+Demais campos: copie exatamente como aparecem; ausente ou ilegível vira null.
+
+Devolva apenas o objeto JSON.
+
+Campos:
+{fields}

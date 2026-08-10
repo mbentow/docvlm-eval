@@ -1,0 +1,24 @@
+Add selective prediction: coverage vs accuracy, with a guard against fake curves
+
+Accuracy alone does not say whether a pipeline is deployable. The question is
+"if I route the least-confident 20% to a human, what accuracy remains on the
+rest", and the answer can differ sharply from the headline number: on the
+bundled hard corpus the 8b run scores 0.583 overall, yet its most-confident
+half is 1.000 with no errors escaping review.
+
+- risk-coverage curve, AURC, accuracy_at(coverage) and coverage_for(accuracy)
+- AURC compared against the mean of 25 random orderings; when the confidence
+  signal ranks no better than shuffling, the report says so rather than drawing
+  a persuasive curve a review policy would then be built on
+- hallucination rate carried along the curve, since coverage that holds accuracy
+  while concentrating invented values is not a win
+- confidence from a declared schema field, else the mean field score
+
+Also adds named image preprocessing profiles, hashed into the config so they
+reach the cache key and the run provenance. They ship with a negative result:
+upscaling regressed accuracy and doubled latency on this corpus.
+
+Ties in the confidence ranking were initially broken by input order, because
+sorted() is stable — a constant confidence signal inherited the corpus order and
+produced a curve that looked informative while ranking nothing. Caught by the
+test that asserts a useless signal is reported as useless.

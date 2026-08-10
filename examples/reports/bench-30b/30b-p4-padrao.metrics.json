@@ -1,0 +1,280 @@
+{
+  "run_name": "30b-p4-padrao",
+  "config_name": "30b-p4-padrao",
+  "corpus_name": "synthetic-forms-hard",
+  "corpus_hash": "d45cda24b564",
+  "n_cases": 60,
+  "fields": [
+    {
+      "name": "patient_name",
+      "n": 60,
+      "accuracy": 0.85,
+      "accuracy_ci": {
+        "value": 0.85,
+        "low": 0.75,
+        "high": 0.9333333333333333
+      },
+      "missing_rate": 0.0,
+      "hallucination_rate": 0.0,
+      "wrong_rate": 0.15,
+      "malformed_rate": 0.0,
+      "refused_rate": 0.0,
+      "mean_score": 0.926828222517077,
+      "critical": false
+    },
+    {
+      "name": "doctor_crm",
+      "n": 60,
+      "accuracy": 0.7333333333333333,
+      "accuracy_ci": {
+        "value": 0.7333333333333333,
+        "low": 0.6166666666666667,
+        "high": 0.85
+      },
+      "missing_rate": 0.0,
+      "hallucination_rate": 0.0,
+      "wrong_rate": 0.26666666666666666,
+      "malformed_rate": 0.0,
+      "refused_rate": 0.0,
+      "mean_score": 0.9052380952380953,
+      "critical": true
+    },
+    {
+      "name": "insurer",
+      "n": 60,
+      "accuracy": 0.7833333333333333,
+      "accuracy_ci": {
+        "value": 0.7833333333333333,
+        "low": 0.6833333333333333,
+        "high": 0.8833333333333333
+      },
+      "missing_rate": 0.0,
+      "hallucination_rate": 0.0,
+      "wrong_rate": 0.21666666666666667,
+      "malformed_rate": 0.0,
+      "refused_rate": 0.0,
+      "mean_score": 0.8752791969239337,
+      "critical": false
+    },
+    {
+      "name": "member_id",
+      "n": 60,
+      "accuracy": 0.7833333333333333,
+      "accuracy_ci": {
+        "value": 0.7833333333333333,
+        "low": 0.6666666666666666,
+        "high": 0.8833333333333333
+      },
+      "missing_rate": 0.0,
+      "hallucination_rate": 0.016666666666666666,
+      "wrong_rate": 0.2,
+      "malformed_rate": 0.0,
+      "refused_rate": 0.0,
+      "mean_score": 0.9022222222222223,
+      "critical": true
+    },
+    {
+      "name": "exams",
+      "n": 60,
+      "accuracy": 0.65,
+      "accuracy_ci": {
+        "value": 0.65,
+        "low": 0.5333333333333333,
+        "high": 0.7666666666666667
+      },
+      "missing_rate": 0.0,
+      "hallucination_rate": 0.0,
+      "wrong_rate": 0.35,
+      "malformed_rate": 0.0,
+      "refused_rate": 0.0,
+      "mean_score": 0.6944444444444444,
+      "critical": false
+    },
+    {
+      "name": "request_date",
+      "n": 60,
+      "accuracy": 0.7,
+      "accuracy_ci": {
+        "value": 0.7,
+        "low": 0.5833333333333334,
+        "high": 0.8166666666666667
+      },
+      "missing_rate": 0.0,
+      "hallucination_rate": 0.0,
+      "wrong_rate": 0.3,
+      "malformed_rate": 0.0,
+      "refused_rate": 0.0,
+      "mean_score": 0.7,
+      "critical": false
+    },
+    {
+      "name": "urgent",
+      "n": 60,
+      "accuracy": 0.9666666666666667,
+      "accuracy_ci": {
+        "value": 0.9666666666666667,
+        "low": 0.9166666666666666,
+        "high": 1.0
+      },
+      "missing_rate": 0.0,
+      "hallucination_rate": 0.0,
+      "wrong_rate": 0.03333333333333333,
+      "malformed_rate": 0.0,
+      "refused_rate": 0.0,
+      "mean_score": 0.9666666666666667,
+      "critical": false
+    }
+  ],
+  "macro_accuracy": 0.780952380952381,
+  "macro_accuracy_ci": {
+    "value": 0.780952380952381,
+    "low": 0.7047619047619047,
+    "high": 0.8523809523809524
+  },
+  "all_fields_correct": 0.5166666666666667,
+  "all_fields_correct_ci": {
+    "value": 0.5166666666666667,
+    "low": 0.4,
+    "high": 0.65
+  },
+  "hallucination_rate": 0.002380952380952381,
+  "critical_hallucination_rate": 0.008333333333333333,
+  "by_tag": [
+    {
+      "tag": "motion_blur",
+      "n": 17,
+      "accuracy": 0.35294117647058826,
+      "all_fields_correct": 0.0
+    },
+    {
+      "tag": "low_light",
+      "n": 11,
+      "accuracy": 0.6493506493506495,
+      "all_fields_correct": 0.2727272727272727
+    },
+    {
+      "tag": "phone_photo",
+      "n": 39,
+      "accuracy": 0.7472527472527473,
+      "all_fields_correct": 0.41025641025641024
+    },
+    {
+      "tag": "printed",
+      "n": 21,
+      "accuracy": 0.7755102040816327,
+      "all_fields_correct": 0.5714285714285714
+    },
+    {
+      "tag": "handwritten",
+      "n": 39,
+      "accuracy": 0.7838827838827839,
+      "all_fields_correct": 0.48717948717948717
+    },
+    {
+      "tag": "stamped",
+      "n": 2,
+      "accuracy": 0.7857142857142857,
+      "all_fields_correct": 0.5
+    },
+    {
+      "tag": "skewed",
+      "n": 14,
+      "accuracy": 0.8061224489795918,
+      "all_fields_correct": 0.5
+    },
+    {
+      "tag": "partial",
+      "n": 5,
+      "accuracy": 0.8285714285714285,
+      "all_fields_correct": 0.6
+    },
+    {
+      "tag": "scanned",
+      "n": 21,
+      "accuracy": 0.8435374149659864,
+      "all_fields_correct": 0.7142857142857143
+    },
+    {
+      "tag": "rotated",
+      "n": 1,
+      "accuracy": 0.8571428571428571,
+      "all_fields_correct": 0.0
+    },
+    {
+      "tag": "glare",
+      "n": 17,
+      "accuracy": 0.9411764705882353,
+      "all_fields_correct": 0.7058823529411765
+    },
+    {
+      "tag": "faded",
+      "n": 2,
+      "accuracy": 1.0,
+      "all_fields_correct": 1.0
+    }
+  ],
+  "latency_p50": 11566.305505002674,
+  "latency_p95": 11916.451381002844,
+  "latency_mean": 11122.581644099895,
+  "tokens_in_mean": 1801.5,
+  "tokens_out_mean": 91.68333333333334,
+  "cost_total": 0.0,
+  "n_refused": 0,
+  "n_cached": 60,
+  "provenance": {
+    "docvlm_eval_version": "0.2.0",
+    "python": "3.11.15",
+    "platform": "Linux-6.8.0-124-generic-aarch64-with-glibc2.35",
+    "config": {
+      "name": "30b-p4-padrao",
+      "runner": "ollama",
+      "model": "qwen3-vl:30b-a3b-instruct",
+      "params": {
+        "temperature": 0,
+        "format": "schema",
+        "num_ctx": 8192,
+        "timeout": 300
+      },
+      "prompt_file": "../prompts/extract_v4_locate_first.txt",
+      "host": "http://localhost:11434",
+      "preprocess": "padrao",
+      "weights": {},
+      "critical_fields": [
+        "doctor_crm",
+        "member_id"
+      ],
+      "source_path": "30b-p4-padrao.yaml",
+      "prompt_hash": "2869e16f62bb",
+      "config_hash": "4321ef3cc9a8"
+    },
+    "prompt_hash": "2869e16f62bb",
+    "schema_hash": "acd6aaa82321",
+    "corpus_hash": "d45cda24b564",
+    "n_cases": 60,
+    "concurrency": 3,
+    "preprocess": {
+      "name": "padrao",
+      "max_side": 1440,
+      "format": "JPEG",
+      "quality": 88,
+      "grayscale": false,
+      "contrast": 1.0,
+      "sharpness": 1.0,
+      "drop_green": false,
+      "flat_field": false
+    },
+    "backend": {
+      "runner": "ollama",
+      "model": "qwen3-vl:30b-a3b-instruct",
+      "hosts": [
+        "http://localhost:11434"
+      ],
+      "quantization": "Q4_K_M",
+      "parameter_size": "31.1B",
+      "family": "qwen3vlmoe",
+      "model_digest": "c871fc73fabc5516",
+      "model_size_bytes": 19595410126,
+      "server_version": "0.31.2"
+    }
+  }
+}

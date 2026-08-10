@@ -1,0 +1,13 @@
+# Escalation step 3: 2560px lossless PNG, greyscale. Slowest, most tokens.
+name: 30b-p1-maxima
+runner: ollama
+model: qwen3-vl:30b-a3b-instruct
+host: ${OLLAMA_HOST:-http://localhost:11434}
+params:
+  temperature: 0
+  format: schema
+  num_ctx: 8192
+  timeout: 300
+prompt: ../prompts/extract_v1.txt
+preprocess: maxima
+critical_fields: [doctor_crm, member_id]

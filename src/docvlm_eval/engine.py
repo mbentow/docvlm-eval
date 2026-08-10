@@ -24,6 +24,8 @@ from docvlm_eval.cache import CachedInference, ResultCache
 from docvlm_eval.compare import score_case
 from docvlm_eval.config import DEFAULT_PROMPT, Config
 from docvlm_eval.corpus import Case, Corpus
+from docvlm_eval.preprocess import describe as describe_profile
+from docvlm_eval.preprocess import prepare
 from docvlm_eval.runners import Runner, build_runner
 from docvlm_eval.types import CaseResult, RunResult
 
@@ -137,6 +139,7 @@ async def run_config(
             "corpus_hash": corpus.hash,
             "n_cases": len(corpus),
             "concurrency": concurrency,
+            "preprocess": describe_profile(config.preprocess),
             "backend": backend_info,
         },
         started_at=started,
@@ -154,7 +157,9 @@ async def _evaluate_case(
     schema_hash: str,
     cache: ResultCache | None,
 ) -> CaseResult:
-    image = case.image_bytes()
+    # The preprocess name is inside config.hash, so a profile change invalidates
+    # the cache. The key uses the *raw* image hash: the same source document
+    # under two profiles must be two entries, not one.
     key = ResultCache.key(config.hash, case.id, case.image_hash(), schema_hash) if cache else ""
 
     hit = cache.get(key) if cache else None
@@ -174,6 +179,9 @@ async def _evaluate_case(
             cached=True,
         )
 
+    # Preprocessing happens after the cache lookup: a cache hit should not pay
+    # for an image transformation whose result is already known.
+    image = await asyncio.to_thread(prepare, case.image_bytes(), config.preprocess)
     output = await runner.extract(image, prompt, json_schema, case_id=case.id)
 
     if cache and not output.error:

@@ -1,0 +1,9 @@
+name: eco-B
+runner: ollama
+model: qwen3-vl:30b-a3b-instruct
+host: ${OLLAMA_HOST:-http://localhost:11434}
+params: { temperature: 0, format: schema, num_ctx: 8192, timeout: 300 }
+prompt: ../prompts/pt_B_transcreva_antes.txt
+preprocess: none
+critical_fields: [medico_crm]
+weights: { procedimentos: 0.5 }

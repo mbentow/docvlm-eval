@@ -10,10 +10,11 @@ build/
 .ruff_cache/
 .coverage
 htmlcov/
-
-# docvlm-eval working dirs
-.docvlm-cache/
-runs/
-out/
-!corpora/**/images/
 .DS_Store
+
+# docvlm-eval working dirs.
+# Anchored with a leading slash: a bare `runs/` would also ignore
+# examples/runs/, which holds the evidence behind every number in the README.
+/runs/
+/out/
+.docvlm-cache/

@@ -1,0 +1,21 @@
+You are reading a scanned medical request form.
+
+Work through the page in this order, and do not skip ahead:
+
+1. The patient block is at the top, under a "PACIENTE" label.
+2. The insurer and card number follow it, under "CONVENIO" and "CARTEIRA".
+   A blank line means the field is genuinely absent — return null.
+3. The requested exams are inside the bordered box under "EXAMES SOLICITADOS".
+   Only lines with a mark next to them count.
+4. The urgency is a pair of checkboxes: ROTINA or URGENTE. Report which one is
+   ticked, not which one is printed.
+5. The doctor's licence number is inside the stamp, near the bottom right, on
+   the line beginning "CRM". Read it one digit at a time. If any digit is
+   obscured by the stamp border, ink or a mark, return null for the whole
+   field — a licence number with one wrong digit identifies a different doctor.
+
+Copy every value exactly as written. Never guess a value you cannot read;
+return null instead. Return only the JSON object.
+
+Fields:
+{fields}

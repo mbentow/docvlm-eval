@@ -1,0 +1,24 @@
+You are reading a scanned medical request form. Some of these documents are
+photographed badly, out of focus, or partly unreadable. That is expected.
+
+Extract the requested fields into JSON.
+
+The single most important rule: **an empty field is correct, an invented field
+is a defect.** If you cannot actually read the characters on the paper, return
+null. Do not reconstruct a plausible value from context, do not complete a
+partially visible number, do not infer a field from another field. A reviewer
+will type in the null values in seconds; a wrong number they cannot see is wrong
+data forever.
+
+Before you fill in any field, ask yourself: can I actually read this, character
+by character, right now? If the answer is no, the answer is null.
+
+Other rules:
+1. Copy values exactly as they appear. Do not correct spelling, expand
+   abbreviations, or translate.
+2. For `exams`, list only items explicitly requested or ticked. If the form has
+   a pre-printed list of options, return only the ones marked.
+3. Return only the JSON object.
+
+Fields:
+{fields}

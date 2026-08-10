@@ -33,6 +33,7 @@ from docvlm_eval.report import (
     html_run,
     markdown_diff,
     markdown_run,
+    markdown_selective,
     print_diff,
     print_run,
     print_sweep,
@@ -182,11 +183,11 @@ def run(
     # No weights/critical passed: the run already carries the resolved policy,
     # so `run`, `report` and `diff` cannot print different numbers for it.
     metrics = compute_metrics(result, bootstrap=bootstrap)
-    print_run(metrics, console)
+    print_run(metrics, console, cases=result.cases)
     console.print(f"[dim]run saved to {path}[/dim]")
 
     if out:
-        paths = write_reports(metrics, out)
+        paths = write_reports(metrics, out, cases=result.cases)
         console.print(f"[dim]reports: {', '.join(str(p) for p in paths.values())}[/dim]")
 
     _gate(metrics, fail_under, fail_hallucination_over)
@@ -216,13 +217,14 @@ def report(
 
     metrics = compute_metrics(result, bootstrap=bootstrap)
     if out:
-        paths = write_reports(metrics, out)
+        paths = write_reports(metrics, out, cases=result.cases)
         console.print("\n".join(str(p) for p in paths.values()))
         return
     if fmt == "term":
-        print_run(metrics, console)
+        print_run(metrics, console, cases=result.cases)
     elif fmt == "md":
         print(markdown_run(metrics))
+        print(markdown_selective(result.cases))
     elif fmt == "html":
         print(html_run(metrics))
     elif fmt == "json":
@@ -346,7 +348,7 @@ def sweep(
         runs[cfg.name] = result
         metrics = compute_metrics(result, bootstrap=bootstrap)
         all_metrics.append(metrics)
-        write_reports(metrics, out)
+        write_reports(metrics, out, cases=result.cases)
     cache.close()
 
     print_sweep(all_metrics, console)

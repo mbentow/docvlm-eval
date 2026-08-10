@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.3.0 — 2026-08-09
+
+**Selective prediction (`selective.py`).** Risk–coverage curve, AURC, and the two questions a
+document pipeline actually has to answer: *what accuracy remains if I automate X%?* and
+*how much can I automate at a given quality bar?* Rendered in the terminal, in Markdown and
+in the run JSON.
+
+- Guard against a persuasive but meaningless curve: AURC is compared to the mean of 25 random
+  orderings, and the report says plainly when the confidence signal ranks no better than
+  shuffling.
+- `validate_holdout()` fits the coverage level on a random half and measures it on the other,
+  because reading an operating point off the curve that produced it is circular. On the
+  bundled 30b run the curve promises 1.000 at 50% coverage; held out, the same policy delivers
+  0.917 at 54% and meets its target on 60% of splits. Both numbers are true; only the second
+  is a forecast.
+- Coverage is transferred as a **fraction**, not as a raw confidence threshold: a threshold
+  admits the whole block of documents sharing that value, so a degenerate signal accepts
+  everything and the policy silently evaluates to no policy at all.
+- Policies automating less than 5% are rejected — "hits 95% by accepting one lucky document"
+  reads as success and is not one.
+- Confidence comes from a declared `confidence` field, or falls back to the mean field score.
+- Hallucination rate is tracked along the curve — coverage that preserves accuracy while
+  concentrating invented values is not a win.
+
+**Image preprocessing profiles (`preprocess.py`).** Named, deterministic, part of the config
+hash so they reach the cache key and the run provenance. Shipped with a negative result:
+on the bundled hard corpus, upscaling regressed accuracy and doubled latency.
+
+**Bug found by the new tests:** ties in the confidence ranking were broken by input order,
+because `sorted` is stable. A constant confidence signal therefore inherited whatever order
+the corpus happened to have and produced a curve that looked informative while ranking
+nothing. Ties are now broken by a seeded hash.
+
 ## 0.2.0 — 2026-08-07
 
 First public release.

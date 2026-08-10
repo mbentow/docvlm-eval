@@ -1,0 +1,13 @@
+# Hypothesis: naming where each field lives, and reading the licence number digit by digit, fixes the CRM. Expect doctor_crm up.
+name: 30b-p4-padrao
+runner: ollama
+model: qwen3-vl:30b-a3b-instruct
+host: ${OLLAMA_HOST:-http://localhost:11434}
+params:
+  temperature: 0
+  format: schema
+  num_ctx: 8192
+  timeout: 300
+prompt: ../prompts/extract_v4_locate_first.txt
+preprocess: padrao
+critical_fields: [doctor_crm, member_id]

@@ -1,0 +1,13 @@
+# Hypothesis: telling the model that an invented value is worse than an empty one converts hallucinations into abstentions. Expect HALL down, MISS up.
+name: 30b-p3-padrao
+runner: ollama
+model: qwen3-vl:30b-a3b-instruct
+host: ${OLLAMA_HOST:-http://localhost:11434}
+params:
+  temperature: 0
+  format: schema
+  num_ctx: 8192
+  timeout: 300
+prompt: ../prompts/extract_v3_abstain.txt
+preprocess: padrao
+critical_fields: [doctor_crm, member_id]
