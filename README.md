@@ -1,105 +1,119 @@
-# docvlm-eval
+<h1 align="center">docvlm-eval</h1>
 
-**Field-level evaluation for document extraction with vision language models.**
+<p align="center">
+  <strong>Did that change make your documents read better, or worse?</strong><br>
+  Field-level evaluation for document extraction with vision language models.
+</p>
 
-Answers one question with a number: *did this change make my documents read better, or worse?*
-
-You give it a schema, a set of documents and their ground truth. It runs N configurations —
-models, quantisations, prompts, preprocessing — and reports accuracy **per field**,
-hallucination rate, missing-field rate, latency and cost, with bootstrap confidence intervals
-so you can tell a result from noise.
-
-[![CI](https://github.com/mbentow/docvlm-eval/actions/workflows/ci.yml/badge.svg)](https://github.com/mbentow/docvlm-eval/actions/workflows/ci.yml)
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-![Python](https://img.shields.io/badge/python-3.11%2B-blue)
+<p align="center">
+  <a href="https://github.com/mbentow/docvlm-eval/actions/workflows/ci.yml"><img src="https://github.com/mbentow/docvlm-eval/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="License"></a>
+  <img src="https://img.shields.io/badge/python-3.11%2B-blue" alt="Python 3.11+">
+</p>
 
 ---
 
-## Why average accuracy lies
+Two vision models read the same 60 medical request forms.
 
-Verbatim output from this tool, comparing `qwen3-vl:8b` against `qwen3-vl:30b-a3b` on 60
-synthetic medical request forms, both served by a local Ollama at `Q4_K_M` — no cloud API,
-no rented GPU. The exact platform, model digest and server version of every run are recorded
-in `examples/runs/*.json` under `provenance`, so you never have to take this paragraph's word
-for what produced a number.
+Their accuracy is **identical, within noise**. One of them is safe to put in a clinic. The
+other is not.
+
+No averaged metric will tell you which one. This tool tells you in a single table — and that
+gap between "same score" and "opposite risk" is the whole reason it exists.
+
+<br>
+
+## The 30-second version
+
+Verbatim output, comparing `qwen3-vl:8b` against `qwen3-vl:30b-a3b`, both on a local Ollama at
+`Q4_K_M`:
 
 ```
-CONFIG qwen3vl-8b    vs BASELINE qwen3vl-30b
-Corpus: synthetic-forms-hard @ d45cda24b564 (60 paired cases)
 FIELD        ┃  BASE ┃  CAND ┃      Δ ┃    Δ 95% CI    ┃ Δ HALL ┃
 ━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━
 patient_name │ 0.800 │ 0.833 │ +0.033 │ -0.033, +0.100 │ +0.0pp │ ~
 doctor_crm   │ 0.750 │ 0.767 │ +0.017 │ -0.050, +0.100 │ +0.0pp │ ~
-insurer      │ 0.733 │ 0.733 │ +0.000 │ -0.083, +0.083 │ +0.0pp │ ~
 member_id    │ 0.717 │ 0.767 │ +0.050 │ -0.033, +0.133 │ -3.3pp │ ~
 exams        │ 0.633 │ 0.700 │ +0.067 │ -0.033, +0.167 │ +0.0pp │ ~
-request_date │ 0.717 │ 0.700 │ -0.017 │ -0.083, +0.033 │ +0.0pp │ ~
-urgent       │ 0.917 │ 0.967 │ +0.050 │ -0.033, +0.133 │ +0.0pp │ ~
 MACRO              0.781  +0.029  [-0.005, +0.064]
 ALL-FIELDS-CORRECT 0.583  +0.050  [-0.050, +0.150]
 
-VERDICT: quality change +0.029 is inside the noise (n=60) — not a result; latency p50 1.42x
-(12,744ms) — check the queue SLA
+VERDICT: quality change +0.029 is inside the noise (n=60) — not a result
 ```
 
 Three things that table says, and a leaderboard would not:
 
-1. **The 4× larger model did not win.** Every per-field delta favours the smaller model except
-   one, and the model with ~31B parameters is the *baseline* here. If you had assumed bigger
-   was better and shipped it, nothing in an average would have told you otherwise.
+**1 · The 4× larger model did not win.** The 31B model is the *baseline* here. Ship it on the
+assumption that bigger is better and no average would have argued with you.
 
-2. **But that is not a result either.** The +0.029 confidence interval crosses zero. With 60
-   documents the honest statement is "no measurable difference", and the tool says so in the
-   verdict line rather than letting you read a ranking into noise. Most model-swap comparisons
-   published online never check this.
+**2 · But that is not a result either.** The interval crosses zero. With 60 documents the
+honest statement is "no measurable difference", and the tool prints that in the verdict line
+instead of letting you read a ranking into noise.
 
-3. **The two models fail in opposite ways.** Almost identical accuracy, completely different
-   risk profile:
+**3 · The two models fail in opposite ways.** Here is the number that decides the product:
 
-   | | missing fields | hallucinated fields | critical hallucination |
-   |---|---:|---:|---:|
-   | qwen3-vl:8b | **5.71%** | **0.00%** | **0.00%** |
-   | qwen3-vl:30b-a3b | 0.95% | 0.48% | **1.67%** |
+|                    | missing fields | hallucinated | **critical hallucination** |
+| ------------------ | -------------: | -----------: | -------------------------: |
+| `qwen3-vl:8b`      |          5.71% |    **0.00%** |                  **0.00%** |
+| `qwen3-vl:30b-a3b` |          0.95% |        0.48% |                  **1.67%** |
 
-   The 8B leaves a field blank when it cannot read it. The 30B fills it in. On `member_id` —
-   an insurance card number — the 8B returned nothing 10% of the time and invented nothing;
-   the 30B never left it blank and invented a value on 3.3% of documents where the card had
-   no number at all.
+The 8B leaves a field blank when it cannot read it. The 30B fills it in. On `member_id` — an
+insurance card number — the 8B returned nothing 10% of the time and invented nothing; the 30B
+never left it blank and **invented a value on 3.3% of documents where the card had no number
+at all**.
 
-   In a clinical or financial workflow that decides the choice. A blank field is an
-   inconvenience: an operator retypes it. An invented insurance number is wrong data entering
-   a system that will trust it. **No averaged metric can show you this**, because both
-   failures cost exactly one point.
+> [!IMPORTANT]
+> A blank field is an operator retyping it. An invented insurance number is wrong data
+> entering a system that will trust it. Both cost exactly one point in any averaged metric.
+>
+> That distinction — `missing` versus `hallucinated` — is the single most important thing this
+> tool measures.
 
-That distinction — `missing` versus `hallucinated` — is the single most important thing this
-tool measures.
+> [!NOTE]
+> CI asserts the numbers on this page against the committed run files, on every push. Move
+> macro accuracy off 0.781 and the build fails. This document cannot quietly go stale.
 
-> **CI asserts the numbers on this page against the committed run files, on every push.** If a
-> change to scoring moves macro accuracy off 0.781, the build fails. This document cannot
-> quietly go stale, and neither can any claim made in it.
+<br>
 
----
+## Contents
 
-## Install
+| | |
+|---|---|
+| [Try it in 30 seconds](#try-it-in-30-seconds) | No GPU, no model download |
+| [Run it against a real model](#run-it-against-a-real-model) | Ollama, sweeps, diffs |
+| [What it measures](#what-it-measures) | Six outcomes, two headline numbers, tag slicing |
+| [Can this actually be deployed?](#can-this-actually-be-deployed) | Coverage vs accuracy, validated out of sample |
+| [Declaring how a field is compared](#declaring-how-a-field-is-compared) | Per field, never globally |
+| [Why this is not a 200-line script](#why-this-is-not-a-200-line-script) | Provenance, caching, CI gates |
+| [Corpus format & the synthetic corpus](docs/CORPUS.md) | Build your own · honest limits of the bundled one |
+| [Design notes](docs/DESIGN.md) | The decisions, and the bugs that caused them |
+| [Methodology](docs/METHODOLOGY.md) | Scoring rules, statistics, known limitations |
+
+<br>
+
+## Try it in 30 seconds
+
+No GPU. No model. The repository ships a synthetic corpus and a mock backend:
 
 ```bash
-pip install -e ".[dev]"      # or: uv pip install -e ".[dev]"
-```
+pip install -e ".[dev]"
 
-## 30 seconds, no GPU
-
-The repository ships a synthetic corpus and a mock backend, so the whole pipeline runs with
-nothing installed but Python:
-
-```bash
 docvlm-eval validate --corpus corpora/synthetic-forms
 docvlm-eval run --corpus corpora/synthetic-forms --config configs/mock-baseline.yaml
 ```
 
 The mock perturbs the ground truth by a fixed amount, producing every failure mode including
-hallucinations, so the shape of the report is visible before you pull a 19 GB model.
+hallucinations — so you see the shape of the report before pulling a 19 GB model.
 
-## Against a real model
+Every number in this README is reproducible with no backend at all, because the runs behind it
+are committed:
+
+```bash
+docvlm-eval report --run hard-qwen3vl-8b --runs-dir examples/runs
+docvlm-eval diff -b hard-qwen3vl-30b -k hard-qwen3vl-8b --runs-dir examples/runs
+```
+
+## Run it against a real model
 
 ```bash
 export OLLAMA_HOST=http://localhost:11434
@@ -109,305 +123,195 @@ docvlm-eval run  --corpus corpora/synthetic-forms-hard --config configs/qwen3vl-
 docvlm-eval diff --baseline qwen3vl-30b --candidate qwen3vl-8b
 ```
 
-`diff` refuses to compare runs made on different corpora — case ids repeat, so pairing them
-would silently compare unrelated documents and report a confident, significant, meaningless
-delta.
-
-Or sweep everything at once, with a shared cache:
+Or sweep every config at once against a shared cache:
 
 ```bash
 docvlm-eval sweep --corpus corpora/synthetic-forms-hard --configs "configs/qwen*.yaml" \
                   --baseline qwen3vl-30b --out out/
 ```
 
-The four runs behind this README are committed, so every number here is reproducible with no
-backend at all:
+> [!WARNING]
+> `diff` refuses to compare runs made on different corpora. Case ids repeat across corpora, so
+> pairing them would silently compare unrelated documents and report a confident, significant,
+> meaningless delta.
 
-```bash
-docvlm-eval report --run hard-qwen3vl-8b --runs-dir examples/runs
-docvlm-eval diff -b hard-qwen3vl-30b -k hard-qwen3vl-8b --runs-dir examples/runs
-```
-
----
+<br>
 
 ## What it measures
 
-**Per field, then aggregated.** For every field of every document, exactly one outcome:
+**Six outcomes per field, never one score.**
 
 | outcome | meaning |
 |---|---|
-| `correct` | matches, *including* correctly returning nothing when the truth is empty |
+| `correct` | matches — *including* correctly returning nothing when the truth is empty |
 | `missing` | the truth has a value, the model returned nothing |
-| `hallucinated` | the truth is empty, the model invented a value [^1] |
+| `hallucinated` | the truth is empty, the model invented a value |
 | `wrong` | both have values and they disagree |
 | `malformed` | the value does not fit the declared type |
 | `refused` | the backend errored or the model declined |
-
-[^1]: One deliberate extension: a `SET_TEXT` field where the prediction shares *nothing* with
-the truth and is longer also counts as `hallucinated`. That is the "transcribed the whole
-pre-printed list of options" failure, not a near miss. See `docs/METHODOLOGY.md` §2.
 
 Backend failures are `refused`, never folded into `wrong` — otherwise an unreliable server
 looks like an inaccurate model. Unparseable *ground truth* is `malformed` too, so a corpus bug
 shows up as a corpus bug instead of capping a field's accuracy for reasons no prompt can fix.
 
-**Two headline numbers, not one.**
+**Two headline numbers, because one is a lie.**
 
-- `MACRO` — weighted mean of per-field accuracy.
-- `ALL-FIELDS-CORRECT` — the fraction of documents with **no** error anywhere. This is the
-  one that maps to the business: a document with one wrong field still needs a human. On the
-  run above it is 0.583 while macro is 0.781 — the gap between "most fields are fine" and
-  "this document can go through untouched".
+- `MACRO` — weighted mean of per-field accuracy → **0.781**
+- `ALL-FIELDS-CORRECT` — documents with *no* error anywhere → **0.583**
 
-**Confidence intervals, from resampling documents.** Fields within a document are
-correlated — a blurry photo hurts all of them at once — so the bootstrap resamples whole
-documents, never fields. Diffs use a *paired* bootstrap on the shared document ids, which is
-what makes the delta interval tight enough to be useful.
+The gap between them is the gap between "most fields are fine" and "this document can go
+through untouched". Only the second maps to a business decision: one wrong field still needs a
+human.
 
-**Breakdown by tag.** Every case carries tags, and the report slices accuracy by them,
-worst first:
+**Confidence intervals that resample documents, not fields.** A blurry photo hurts every field
+at once, so fields within a document are correlated. Diffs use a *paired* bootstrap on shared
+document ids, which is what makes the interval tight enough to be useful.
+
+**Accuracy sliced by tag — worst first.** This is where the actionable finding lives:
 
 ```
 BY TAG      ┃   ACC ┃ ALL-OK ┃  n ┃
 ━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━╇━━━━╇━━━
 motion_blur │ 0.361 │  0.000 │ 17 │ !
 low_light   │ 0.610 │  0.182 │ 11 │ !
-stamped     │ 0.643 │  0.500 │  2 │ !
 phone_photo │ 0.758 │  0.538 │ 39 │ !
 handwritten │ 0.777 │  0.564 │ 39 │ !
 printed     │ 0.789 │  0.619 │ 21 │ !
-skewed      │ 0.816 │  0.571 │ 14 │ !
 scanned     │ 0.823 │  0.667 │ 21 │ !
-partial     │ 0.857 │  0.800 │  5 │ !
 glare       │ 0.941 │  0.824 │ 17 │
-faded       │ 1.000 │  1.000 │  2 │
 rotated     │ 1.000 │  1.000 │  1 │
 ```
 
-"78% accuracy" is not actionable. "36% under motion blur, 79% on printed — and not one
-motion-blurred document came out clean" tells you what to build next. Note the `n` column:
-`rotated` at 1.000 is one document, which is a hint, not a finding. Tag your corpus
-generously, and read the counts.
+"78% accuracy" is not actionable. "36% under motion blur, and not one motion-blurred document
+came out clean" tells you what to build next.
 
-**Operational cost.** Latency p50/p95, tokens in/out, cost per document (0 for local).
+Note the `n` column: `rotated` at 1.000 is **one document**. That is a hint, not a finding —
+and the report never lets you forget which is which.
 
-**Coverage vs accuracy — the number that decides the product.** Accuracy alone does not tell
-you whether a system is deployable. This does, for `qwen3-vl:30b-a3b` on the hard corpus:
+**Operational cost.** Latency p50/p95, tokens in/out, cost per document.
+
+<br>
+
+## Can this actually be deployed?
+
+Accuracy alone does not answer that. This does — `qwen3-vl:30b-a3b`, hard corpus:
 
 ```
 AUTOMATE ┃   ACC ┃ ERR ESCAPING ┃  HALL
 ━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━
      50% │ 1.000 │         0.0% │ 0.00%
-     60% │ 0.889 │        11.1% │ 0.00%
      70% │ 0.762 │        23.8% │ 0.00%
-     80% │ 0.667 │        33.3% │ 0.00%
     100% │ 0.533 │        46.7% │ 0.48%
 AURC 0.1353 vs random 0.4421 — ranking gain 69%
 ```
 
 Read as a whole the run scores 0.533. But **its most-confident half is 1.000, with nothing
-escaping review** — the model does know which documents it got wrong. A model at 0.75 that
-knows which quarter it failed beats a model at 0.80 that is uniformly, confidently mediocre.
+escaping review** — the model knows which documents it got wrong. A model at 0.75 that knows
+which quarter it failed beats a model at 0.80 that is uniformly, confidently mediocre.
 
-**But do not read a coverage level off that table and call it a result.** The level was chosen
-by looking at the same documents it is then evaluated on. `validate_holdout` fits the coverage
-on a random half and measures it on the other, 200 times:
+**Now the part almost nobody publishes.** That operating point was chosen by looking at the
+same documents it is then evaluated on. `validate_holdout` fits the coverage on a random half
+and measures it on the other, 200 times:
 
 ```
 target 0.95 → automate 54% → real accuracy 0.917 [0.571, 1.000] vs 0.533 with no policy
               lift +0.384, target actually met on 60% of splits
 ```
 
-The policy is worth having — a **+0.38 lift** on the automated slice is not noise. But the
-target survives the transfer only 60% of the time, and the interval reaches down to 0.571.
-That gap between the curve (1.000 at 50%) and the honest out-of-sample number (0.917 at 54%)
-is what selecting an operating point on your evaluation set costs you, and it is the number
-to take into a production decision.
+The policy is worth having: **+0.38 lift** on the automated slice is not noise. But the target
+survives the transfer only 60% of the time. The gap between the curve (1.000 at 50%) and the
+honest out-of-sample number (0.917 at 54%) is exactly what selecting an operating point on
+your evaluation set costs you — and it is the number to take into a production decision.
 
-Two guards make the section trustworthy: AURC is compared against the mean of 25 random
-orderings, so a confidence signal that does not rank is reported as such instead of getting a
-persuasive curve; and a policy that would automate less than 5% is rejected rather than
-counted as a success, because "meets 95% by accepting one lucky document" is not a policy.
-Confidence comes from a `confidence` field in your schema if you declare one, and from the
-mean field score otherwise.
+Two guards keep the section trustworthy:
 
----
+- AURC is compared against the mean of 25 random orderings. A confidence signal that ranks no
+  better than shuffling is reported as such, instead of getting a persuasive curve.
+- A policy that would automate less than 5% is rejected, because "meets 95% by accepting one
+  lucky document" is not a policy.
 
-## Comparison is declared per field, not globally
+<br>
 
-This is where home-made evaluators usually go wrong. A patient name should ignore case and
-accents. A licence number should be reduced to digits. A date must be parsed and compared as
-a date. One global rule for all three quietly reports the wrong number.
+## Declaring how a field is compared
+
+A patient name should ignore case and accents. A licence number should be reduced to digits. A
+date must be parsed as a date. **One global rule for all three quietly reports the wrong
+number.**
 
 ```python
-from docvlm_eval import Compare, ExtractionSchema, field
-
-
 class MedicalRequest(ExtractionSchema):
     patient_name: str | None = field(
         None,
-        description="Full name of the patient",
         compare=Compare.TEXT,
         fuzzy_threshold=0.90,  # an operator would accept a near miss
     )
     doctor_crm: str | None = field(
         None,
-        description="Licence number of the requesting doctor",
         compare=Compare.DIGITS,
         critical=True,  # one wrong digit = a different doctor
     )
     exams: list[str] = field(
         default_factory=list,
-        description="Every exam explicitly requested",
-        compare=Compare.SET_TEXT,  # strict: reading 3 on a 1-exam form is an error
+        compare=Compare.SET_TEXT,  # reading 3 exams on a 1-exam form is an error
     )
     request_date: str | None = field(None, compare=Compare.DATE, dayfirst=True)
     urgent: bool | None = field(None, compare=Compare.BOOL)
 ```
 
-Available modes: `EXACT`, `TEXT`, `DIGITS`, `NUMBER`, `DATE`, `BOOL`, `SET_TEXT`. Fields marked
-`critical` get their own hallucination rate, because a hallucinated licence number is a
+Modes: `EXACT` · `TEXT` · `DIGITS` · `NUMBER` · `DATE` · `BOOL` · `SET_TEXT`.
+
+Fields marked `critical` get their own hallucination rate — a hallucinated licence number is a
 different class of problem from a hallucinated free-text note.
 
-The same class becomes the JSON Schema sent to the backend for constrained decoding, so the
-prompt, the constraint and the scoring can never drift apart.
+The same class becomes the JSON Schema sent to the backend for constrained decoding, so **the
+prompt, the constraint and the scoring can never drift apart.**
 
-## Corpus format
+<br>
 
-Deliberately boring. A clever format is why nobody uses your evaluator, including you, six
-months from now.
+## Why this is not a 200-line script
 
-```
-corpora/my-corpus/
-├─ manifest.jsonl
-├─ schema.py
-└─ images/
-```
+- **Reproducibility.** Every run records model digest (not the mutable tag), server version,
+  quantisation, corpus hash, prompt hash, schema hash, library version, temperature,
+  concurrency. Without it, a comparison three weeks later is two numbers of unknown origin.
+- **The corpus hash covers the ground truth.** Edit one truth value and `diff` exits non-zero
+  rather than comparing across the edit.
+- **Cache the inference, never the scoring.** Change a normaliser and every number updates
+  instantly without touching a GPU. Change the prompt and the cache invalidates itself, so you
+  cannot accidentally A/B a prompt against itself.
+- **Prompts stay out of the output.** Provenance records the prompt *hash*, never the text —
+  publish a report without leaking a tuned prompt.
+- **CI gate.** `--fail-under`, `--fail-hallucination-over`, and a `--fail-on-regression` that
+  only fires on a *statistically significant* per-field drop, so sampling noise does not block
+  your pipeline.
 
-```jsonl
-{"id":"0001","image":"images/0001.jpg","truth":{"patient_name":"Marina Ferrazzo","doctor_crm":"20154-RS","insurer":null,"exams":["Holter 24h"],"urgent":false},"tags":["handwritten","phone_photo","low_light"]}
-```
+Full reasoning, and the bugs that produced each decision → [`docs/DESIGN.md`](docs/DESIGN.md).
 
-`docvlm-eval validate` checks it before you spend GPU hours: missing images, duplicate ids,
-and — the one that actually bites — **ground-truth keys that are not in the schema**, which
-would otherwise show up as a field permanently stuck at 0% while you go looking for the cause
-in the model.
-
----
-
-## Details that separate this from a script
-
-**Reproducibility.** Every run records the model digest (not just the mutable tag), server
-version, quantisation, corpus content hash, prompt hash, schema hash, library version,
-temperature and concurrency. Without that, a comparison three weeks later is two numbers of
-unknown origin.
-
-**The corpus hash covers the ground truth.** Edit one truth value and the hash changes, so
-`diff` exits non-zero rather than comparing runs from before and after the edit (`--force` to
-override). Filtering to a subset also changes the hash. Deltas and their intervals are both
-computed on the paired subset, so the band always sits around the number printed beside it.
-
-**Scoring policy travels with the run.** `critical` and `weight` are declared in the schema,
-optionally overridden per config, resolved once, and stored in the run. `run`, `report` and
-`diff` therefore cannot print three different macro accuracies for the same run.
-
-**Cache the inference, never the scoring.** Model outputs are cached by
-`(config, case, image, schema)`; scoring is always recomputed. Change a normaliser and every
-number updates instantly, without touching a GPU. Change the prompt and the cache invalidates
-itself, so you cannot accidentally A/B a prompt against itself.
-
-**Prompts stay out of the output.** Provenance records the prompt *hash*, never the text, so a
-run report can be published without leaking a tuned prompt.
-
-**CI gate.**
-
-```bash
-docvlm-eval run  --corpus corpora/my-corpus --config configs/prod.yaml --fail-under 0.85 \
-                 --fail-hallucination-over 0.01
-docvlm-eval diff -b prod -k candidate --fail-on-regression
-```
-
-Exits non-zero on regression. `--fail-on-regression` only fires on a *statistically
-significant* per-field drop, so ordinary sampling noise does not block your pipeline.
-
----
-
-## The synthetic corpus, and an honest note about it
-
-`corpora/synthetic-forms` is generated by `tools/generate_synthetic_corpus.py` from a fixed
-seed and a list of invented names. Every value is fabricated. It exists so that anyone can run
-this tool without having documents of their own.
-
-**It saturates, and that is worth reporting.** Both `qwen3-vl:8b` and `qwen3-vl:30b` score at
-or near 1.000 on the clean version:
-
-| corpus | model | macro | all-fields-correct | hallucination |
-|---|---|---:|---:|---:|
-| `synthetic-forms` | qwen3-vl:8b | 1.000 | 1.000 | 0.00% |
-| `synthetic-forms` | qwen3-vl:30b-a3b | 0.981 | 0.867 | 0.24% |
-| `synthetic-forms-hard` | qwen3-vl:8b | 0.781 | 0.583 | 0.00% |
-| `synthetic-forms-hard` | qwen3-vl:30b-a3b | 0.752 | 0.533 | 0.48% |
-
-A benchmark everybody passes measures nothing. Rendered fonts — even jittered and slanted —
-are far easier than photographed handwriting. `--hard` reproduces what actually breaks
-extraction in the field: low effective resolution, motion blur, glare, a stamp across the
-licence number. That is what produced the numbers at the top of this README.
-
-Treat the synthetic corpus as a **smoke test and a demo**, not as evidence about your
-documents. The corpus is the part that matters, and it is the part only you can build.
-
-> Reproduce: `python tools/generate_synthetic_corpus.py --out corpora/synthetic-forms-hard -n 60 --hard --seed 424242`
->
-> Patients, doctors, clinics and insurers are all invented — the insurer names are not real
-> trade names. Every image is watermarked *SYNTHETIC DOCUMENT — Not a real request*.
-
-Full methodology and limitations: [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md).
-
----
+<br>
 
 ## Backends
 
 | runner | status |
 |---|---|
-| `ollama` | supported — constrained decoding via `format`, multi-host round robin, model digest recorded |
-| `mock` | supported — replays a `predictions.jsonl` (`params.predictions`), or perturbs the truth deterministically, seeded per case |
+| `ollama` | supported — constrained decoding via `format`, multi-host round robin, digest recorded |
+| `mock` | supported — replays a `predictions.jsonl`, or perturbs the truth deterministically |
 | `mlx` | planned |
-| `openai` (any compatible endpoint) | planned |
+| `openai`-compatible | planned — covers vLLM, SGLang, TGI |
 
-The `Runner` interface is 20 lines; adding a backend does not touch the scoring code.
+The `Runner` interface is 20 lines. Adding a backend does not touch scoring code.
 
 ## Roadmap
 
-- [x] corpus, schema, Ollama runner, per-field scoring, markdown/HTML reports
-- [x] separated failure modes, tag slicing, `diff` with paired bootstrap
-- [x] result cache, `--fail-under` / `--fail-on-regression` for CI
-- [x] selective prediction: risk–coverage curve, AURC against a random-ordering baseline, and
-      out-of-sample validation of the operating point
-- [ ] MLX and OpenAI-compatible runners — the latter covers vLLM, SGLang and TGI
-- [ ] calibration proper: expected calibration error, and reliability diagrams alongside the
-      coverage curve
+- [x] per-field scoring, separated failure modes, tag slicing, markdown/HTML reports
+- [x] `diff` with paired bootstrap, result cache, CI gates
+- [x] selective prediction: risk–coverage, AURC vs random ordering, out-of-sample validation
+- [ ] MLX and OpenAI-compatible runners
+- [ ] calibration proper: expected calibration error and reliability diagrams
 - [ ] energy per document
-
-## Development
-
-```bash
-uv pip install -e ".[dev]"
-pytest          # concentrated on normalisation and scoring
-ruff check .
-```
-
-Scoring is where a silent bug is most expensive — it would not crash, it would just change
-every number. That module has the densest tests, and they earned it: an ISO ground-truth date
-being reinterpreted by the `dayfirst` setting, pt-BR month names scored as malformed, a
-bootstrap interval indexed asymmetrically, and a shared RNG in the mock backend that made
-results depend on `-j` were all caught by tests rather than by a reader.
-
-See `CHANGELOG.md` for the full list.
 
 ## Scope
 
-Deliberately **not** in scope: production extraction, annotation tooling, fine-tuning, and
-anything beyond documents → structured JSON.
+Documents → structured JSON, and measuring that honestly. Deliberately **not** in scope:
+production extraction, annotation tooling, fine-tuning.
 
 ## License
 
