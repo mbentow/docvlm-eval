@@ -18,7 +18,10 @@ so you can tell a result from noise.
 ## Why average accuracy lies
 
 Verbatim output from this tool, comparing `qwen3-vl:8b` against `qwen3-vl:30b-a3b` on 60
-synthetic medical request forms, both running locally on Apple Silicon:
+synthetic medical request forms, both served by a local Ollama at `Q4_K_M` — no cloud API,
+no rented GPU. The exact platform, model digest and server version of every run are recorded
+in `examples/runs/*.json` under `provenance`, so you never have to take this paragraph's word
+for what produced a number.
 
 ```
 CONFIG qwen3vl-8b    vs BASELINE qwen3vl-30b
@@ -70,6 +73,10 @@ Three things that table says, and a leaderboard would not:
 
 That distinction — `missing` versus `hallucinated` — is the single most important thing this
 tool measures.
+
+> **CI asserts the numbers on this page against the committed run files, on every push.** If a
+> change to scoring moves macro accuracy off 0.781, the build fails. This document cannot
+> quietly go stale, and neither can any claim made in it.
 
 ---
 
@@ -374,16 +381,18 @@ The `Runner` interface is 20 lines; adding a backend does not touch the scoring 
 - [x] corpus, schema, Ollama runner, per-field scoring, markdown/HTML reports
 - [x] separated failure modes, tag slicing, `diff` with paired bootstrap
 - [x] result cache, `--fail-under` / `--fail-on-regression` for CI
-- [ ] MLX and OpenAI-compatible runners
-- [ ] calibration: ECE and the coverage-vs-accuracy curve — *"if I send the least confident
-      20% to human review, what accuracy remains in the automated 80%?"*
-- [ ] energy per document on Apple Silicon
+- [x] selective prediction: risk–coverage curve, AURC against a random-ordering baseline, and
+      out-of-sample validation of the operating point
+- [ ] MLX and OpenAI-compatible runners — the latter covers vLLM, SGLang and TGI
+- [ ] calibration proper: expected calibration error, and reliability diagrams alongside the
+      coverage curve
+- [ ] energy per document
 
 ## Development
 
 ```bash
 uv pip install -e ".[dev]"
-pytest          # 94 tests, concentrated on normalisation and scoring
+pytest          # concentrated on normalisation and scoring
 ruff check .
 ```
 
