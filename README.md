@@ -9,6 +9,16 @@
   <a href="https://github.com/mbentow/docvlm-eval/actions/workflows/ci.yml"><img src="https://github.com/mbentow/docvlm-eval/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="License"></a>
   <img src="https://img.shields.io/badge/python-3.11%2B-blue" alt="Python 3.11+">
+  <img src="https://img.shields.io/badge/GPU-not%20required-brightgreen" alt="No GPU required">
+</p>
+
+<p align="center">
+  <a href="#who-this-is-for">Who it's for</a> ·
+  <a href="#try-it-in-30-seconds">Quickstart</a> ·
+  <a href="#what-it-measures">What it measures</a> ·
+  <a href="docs/CORPUS.md">Corpus</a> ·
+  <a href="docs/DESIGN.md">Design notes</a> ·
+  <a href="docs/METHODOLOGY.md">Methodology</a>
 </p>
 
 ---
@@ -75,19 +85,35 @@ at all**.
 
 <br>
 
-## Contents
+## Who this is for
 
-| | |
-|---|---|
-| [Try it in 30 seconds](#try-it-in-30-seconds) | No GPU, no model download |
-| [Run it against a real model](#run-it-against-a-real-model) | Ollama, sweeps, diffs |
-| [What it measures](#what-it-measures) | Six outcomes, two headline numbers, tag slicing |
-| [Can this actually be deployed?](#can-this-actually-be-deployed) | Coverage vs accuracy, validated out of sample |
-| [Declaring how a field is compared](#declaring-how-a-field-is-compared) | Per field, never globally |
-| [Why this is not a 200-line script](#why-this-is-not-a-200-line-script) | Provenance, caching, CI gates |
-| [Corpus format & the synthetic corpus](docs/CORPUS.md) | Build your own · honest limits of the bundled one |
-| [Design notes](docs/DESIGN.md) | The decisions, and the bugs that caused them |
-| [Methodology](docs/METHODOLOGY.md) | Scoring rules, statistics, known limitations |
+You have documents, a schema, and a decision to make about a model. You are one of these
+three people:
+
+| If you are… | you reach for this when… | and you get back… |
+| --- | --- | --- |
+| **Choosing a model or a quantisation** | "is the 30B worth 4× the memory over the 8B?" | a per-field delta with a confidence interval, and a verdict line that says *not a result* when the interval crosses zero |
+| **Tuning a prompt or preprocessing** | "did that rewrite help, or did I just get lucky on 20 documents?" | a paired bootstrap over the same documents, so the change is separated from the sampling |
+| **Deciding what to automate** | "what can go through untouched, and what must a human see?" | a coverage-vs-accuracy curve, validated out of sample, with the escaping-error rate at each level |
+
+### What you can do with it
+
+- **Compare two models, prompts, or preprocessing profiles** on your own documents, field by field
+- **Separate a blank field from an invented one** — the distinction averaged metrics destroy
+- **Find where accuracy actually breaks** by slicing on tags: motion blur, glare, handwriting, stamps
+- **Decide an automation threshold** and see what it really delivers on documents it was not fitted on
+- **Gate a pipeline in CI** with `--fail-under`, `--fail-hallucination-over`, `--fail-on-regression`
+- **Reproduce any number later** — every run records model digest, prompt hash, corpus hash, versions
+
+### When *not* to use it
+
+- **You want production extraction.** This measures extraction; it does not do it.
+- **You have no ground truth.** Sixty labelled documents of your own beat any bundled corpus.
+  Without them this tool has nothing to compare against, and no evaluator can invent it for you.
+- **You want a leaderboard number.** It will keep telling you your sample is too small to rank
+  anything, which is correct and unsatisfying.
+- **Your task is not documents → structured JSON.** Free-form summarisation, RAG answers and
+  chat quality need a different instrument.
 
 <br>
 
@@ -284,7 +310,15 @@ prompt, the constraint and the scoring can never drift apart.**
   only fires on a *statistically significant* per-field drop, so sampling noise does not block
   your pipeline.
 
-Full reasoning, and the bugs that produced each decision → [`docs/DESIGN.md`](docs/DESIGN.md).
+<br>
+
+## Documentation
+
+| | |
+|---|---|
+| [**Corpus format**](docs/CORPUS.md) | Build your own in three files — and the honest limits of the bundled synthetic one, including the fact that its clean half saturates |
+| [**Design notes**](docs/DESIGN.md) | Every decision, and the bug that caused it |
+| [**Methodology**](docs/METHODOLOGY.md) | Scoring rules, the statistics, and what this does not measure |
 
 <br>
 
@@ -307,11 +341,6 @@ The `Runner` interface is 20 lines. Adding a backend does not touch scoring code
 - [ ] MLX and OpenAI-compatible runners
 - [ ] calibration proper: expected calibration error and reliability diagrams
 - [ ] energy per document
-
-## Scope
-
-Documents → structured JSON, and measuring that honestly. Deliberately **not** in scope:
-production extraction, annotation tooling, fine-tuning.
 
 ## License
 
