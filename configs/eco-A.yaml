@@ -1,3 +1,7 @@
+# Portuguese-prompt A/B. Targets a Portuguese-language field schema
+# (`procedimentos`, `medico_crm`) that is not part of the bundled corpora, so
+# these configs are here as worked examples of prompt iteration, not as runs you
+# can reproduce from this repository. The prompts they point at are in prompts/.
 name: eco-A
 runner: ollama
 model: qwen3-vl:30b-a3b-instruct

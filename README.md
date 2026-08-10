@@ -9,7 +9,7 @@ models, quantisations, prompts, preprocessing — and reports accuracy **per fie
 hallucination rate, missing-field rate, latency and cost, with bootstrap confidence intervals
 so you can tell a result from noise.
 
-[![CI](https://github.com/bentow/docvlm-eval/actions/workflows/ci.yml/badge.svg)](https://github.com/bentow/docvlm-eval/actions/workflows/ci.yml)
+[![CI](https://github.com/mbentow/docvlm-eval/actions/workflows/ci.yml/badge.svg)](https://github.com/mbentow/docvlm-eval/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
 
