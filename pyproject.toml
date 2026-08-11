@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "docvlm-eval"
-version = "0.3.0"
+version = "0.4.0"
 description = "Field-level evaluation for document extraction with vision language models"
 readme = "README.md"
 requires-python = ">=3.11"

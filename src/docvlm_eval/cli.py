@@ -28,6 +28,8 @@ from docvlm_eval.cache import ResultCache
 from docvlm_eval.config import load_config
 from docvlm_eval.corpus import CorpusError, load_corpus
 from docvlm_eval.engine import run_config
+from docvlm_eval.leakage import leakage_report
+from docvlm_eval.leakage import render as render_leakage
 from docvlm_eval.metrics import compute_metrics, diff_runs
 from docvlm_eval.report import (
     html_run,
@@ -234,6 +236,46 @@ def report(
     else:
         err.print(f"[red]unknown format {fmt!r}[/red]")
         raise typer.Exit(EXIT_BAD_INPUT)
+
+
+@app.command()
+def echo(
+    run_name: str = typer.Option(..., "--run", "-r", help="Run name or path to a run JSON."),
+    config: Path = typer.Option(..., "--config", help="Config whose prompt produced the run."),
+    runs_dir: Path = typer.Option(Path("runs"), help="Where runs are stored."),
+) -> None:
+    """Check whether answers came from the page or from the prompt.
+
+    Needs the config because a run stores only the prompt *hash* — the prompt
+    text stays out of run files on purpose, so results can be published without
+    leaking the prompt. Pass the config that produced the run and the hashes are
+    checked for you.
+
+    Exits non-zero when a literal is both over-produced and less accurate, so it
+    can gate a release the same way ``diff`` does.
+    """
+    store = RunStore(runs_dir)
+    try:
+        result = store.load(run_name)
+        cfg = load_config(config)
+    except (FileNotFoundError, OSError) as exc:
+        err.print(f"[red]{exc}[/red]")
+        raise typer.Exit(EXIT_BAD_INPUT) from exc
+
+    stored = str(result.provenance.get("prompt_hash") or "")
+    if stored and stored != cfg.prompt_hash:
+        # Scoring the wrong prompt against a run is worse than not scoring it:
+        # every literal comes back clean and the check looks like it passed.
+        err.print(
+            f"[red]This config's prompt ({cfg.prompt_hash}) is not the one that "
+            f"produced '{result.name}' ({stored}).[/red]"
+        )
+        raise typer.Exit(EXIT_BAD_INPUT)
+
+    report_ = leakage_report(result.cases, cfg.prompt)
+    console.print(render_leakage(report_))
+    if not report_.clean:
+        raise typer.Exit(EXIT_GATE_FAILED)
 
 
 @app.command()

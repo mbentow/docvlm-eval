@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.4.0 — 2026-08-11
+
+**Prompt echo detection (`leakage.py`, `docvlm-eval echo`).** Answers a question accuracy
+cannot: did the model read the document, or repeat the instructions? Every worked example in a
+prompt is a string the model can emit without looking at the image, and it passes for a normal
+answer because it is one.
+
+- A literal is flagged only when it is **over-produced relative to the ground truth *and* less
+  accurate than the model's own baseline**. Both conditions, never either.
+- That second condition is the whole design. Counting how often the model says your example
+  proves nothing — examples are chosen *because* they are the common case. Measured on a 200k
+  deployment: the inline example appeared in 4.4% of predictions against a 7.7% base rate in
+  the truth, and those predictions were 90.2% correct versus 80.6% elsewhere. Frequency raised
+  the question; accuracy answered it; the check correctly stays silent.
+- Lift is `None`, not infinity, when the truth never contains the literal — on a small corpus
+  that is usually a fact about the corpus, not about the model.
+- Literals come from quoted spans and runs of two or more ALL-CAPS tokens. Single caps words
+  are excluded: `JSON`, `ONLY`, `NOT` are how prompts shout, not answers a model would copy,
+  and including them buries the signal.
+- Fewer than 3 echoing cases is reported but never flagged — accuracy on a subset that small is
+  noise.
+- `echo` refuses to run when the config's `prompt_hash` does not match the run's. Scoring the
+  wrong prompt is worse than not scoring: everything comes back clean and the check looks like
+  it passed.
+- Exits 2 on a flagged literal, so it gates a release like `diff` does.
+
 ## 0.3.0 — 2026-08-09
 
 **Selective prediction (`selective.py`).** Risk–coverage curve, AURC, and the two questions a

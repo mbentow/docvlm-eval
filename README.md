@@ -216,6 +216,26 @@ and the report never lets you forget which is which.
 
 **Operational cost.** Latency p50/p95, tokens in/out, cost per document.
 
+**Whether the answer came from the page or from your prompt.** Every worked example you put in
+the instructions is a string the model can emit without looking at the image, and it will pass
+for a normal answer — because it *is* one.
+
+```console
+$ docvlm-eval echo --run 30b-p2-padrao --config configs/30b-p2-padrao.yaml
+```
+
+The obvious version of this check does more harm than good. Counting how often the model says
+your example proves nothing: examples get chosen *because* they are the common case, so they
+*should* be frequent. Measured on a 200k-document deployment, the string used as an inline
+example appeared in 4.4% of predictions — alarming until you check the ground truth, where the
+same value is 7.7% of all documents. The model was saying it *less* than reality.
+
+So a literal is flagged only when it is **over-produced relative to the ground truth *and*
+less accurate than the model's own baseline**. Frequency raises the question; accuracy answers
+it. On that same deployment, predictions containing the example were 90.2% correct against
+80.6% for everything else — higher, not lower. The check clears it and leaves the prompt alone,
+which is the whole point.
+
 <br>
 
 ## Can this actually be deployed?
