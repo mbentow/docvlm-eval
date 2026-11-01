@@ -25,11 +25,14 @@ plot suggests.
 
 Confidence source, in order of preference:
 
-1. a field named ``confidence`` (or ``--confidence-field``) that the model fills
+1. the score the producing system recorded per document (``replay`` runner) —
+   the threshold a production queue actually uses, so the curve answers the
+   question about *that* threshold;
+2. a field named ``confidence`` (or ``--confidence-field``) that the model fills
    in as part of the schema;
-2. otherwise, the **mean field score** of the document, which is free: it
+3. otherwise, the **mean field score** of the document, which is free: it
    already blends fuzzy similarity and exact matches;
-3. abstention count is exposed separately, because a model that returns nulls
+4. abstention count is exposed separately, because a model that returns nulls
    when unsure is doing selective prediction implicitly, and that deserves to be
    measured rather than penalised.
 """
@@ -135,6 +138,8 @@ def case_confidence(case: CaseResult, confidence_field: str | None = None) -> fl
     An explicit field wins. Otherwise the mean field score is used — it is not a
     calibrated probability and is not treated as one; it only has to *rank*.
     """
+    if case.confidence is not None and not confidence_field:
+        return case.confidence
     name = confidence_field or DEFAULT_CONFIDENCE_FIELD
     for result in case.fields:
         if result.field == name:
@@ -168,6 +173,11 @@ def _aurc(ordered: list[CaseResult]) -> float:
     return total_risk / len(ordered)
 
 
+def _uses_recorded(cases: list[CaseResult], confidence_field: str | None) -> bool:
+    """Recorded confidence wins unless a schema field was asked for by name."""
+    return not confidence_field and any(c.confidence is not None for c in cases)
+
+
 def _rank(cases: list[CaseResult], confidence_field: str | None, seed: int) -> list[CaseResult]:
     """Most confident first.
 
@@ -176,9 +186,18 @@ def _rank(cases: list[CaseResult], confidence_field: str | None, seed: int) -> l
     order the corpus happens to have and draw a curve that ranks nothing.
     """
 
+    recorded = _uses_recorded(cases, confidence_field)
+
     def key(case: CaseResult) -> tuple[float, str]:
         jitter = hashlib.sha1(f"{seed}|{case.case_id}".encode()).hexdigest()
-        return (-case_confidence(case, confidence_field), jitter)
+        if recorded:
+            # A document the pipeline gave no score to goes to review first.
+            # Falling back to the mean field score for it would rank it with
+            # the ground truth — an oracle no production queue has.
+            conf = case.confidence if case.confidence is not None else 0.0
+        else:
+            conf = case_confidence(case, confidence_field)
+        return (-conf, jitter)
 
     return sorted(cases, key=key)
 
@@ -197,11 +216,15 @@ def selective_report(
     explicit = any(
         f.field == (confidence_field or DEFAULT_CONFIDENCE_FIELD) for c in usable for f in c.fields
     )
-    source = (
-        f"schema field '{confidence_field or DEFAULT_CONFIDENCE_FIELD}'"
-        if explicit
-        else "mean field score (no confidence field in the schema)"
-    )
+    if _uses_recorded(usable, confidence_field):
+        unscored = sum(1 for c in usable if c.confidence is None)
+        source = "confidence recorded by the pipeline" + (
+            f" ({unscored} case(s) without one ranked last)" if unscored else ""
+        )
+    elif explicit:
+        source = f"schema field '{confidence_field or DEFAULT_CONFIDENCE_FIELD}'"
+    else:
+        source = "mean field score (no confidence field in the schema)"
 
     ordered = _rank(usable, confidence_field, seed)
 

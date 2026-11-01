@@ -130,6 +130,15 @@ class RunMetrics:
     """How many cases were served from cache. Their latency is a real
     measurement from the original call, but it was not measured *now* — on a
     fully cached re-run, treat the latency numbers as historical."""
+    throughput_per_min: float = 0.0
+    """Documents finished per minute of wall clock, first start to last finish.
+    Latency says how long one document waits; this says how many the system
+    clears. Concurrency moves them in opposite directions."""
+    mean_in_flight: float = 0.0
+    """Busy time over wall time — the parallelism actually achieved. Below the
+    configured concurrency means the backend serialised the work."""
+    n_timed: int = 0
+    """Cases with real start/finish times. Cache hits have none."""
     provenance: dict[str, Any] = field(default_factory=dict)
 
     def field_by_name(self, name: str) -> FieldMetrics | None:
@@ -162,6 +171,9 @@ class RunMetrics:
             "cost_total": self.cost_total,
             "n_refused": self.n_refused,
             "n_cached": self.n_cached,
+            "throughput_per_min": self.throughput_per_min,
+            "mean_in_flight": self.mean_in_flight,
+            "n_timed": self.n_timed,
             "provenance": self.provenance,
         }
 
@@ -242,6 +254,23 @@ def bootstrap_ci(
     return Interval(point, lo, hi)
 
 
+def throughput_stats(cases: list[CaseResult]) -> tuple[float, float, int]:
+    """``(docs/min, mean in flight, n timed)`` over cases with real timestamps.
+
+    Fewer than two timed cases gives zeros: one document has a latency, not a
+    rate. Cached cases are excluded rather than counted as instant, which would
+    report a re-run as infinitely fast.
+    """
+    timed = [c for c in cases if c.started_at > 0 and c.finished_at >= c.started_at]
+    if len(timed) < 2:
+        return 0.0, 0.0, len(timed)
+    span = max(c.finished_at for c in timed) - min(c.started_at for c in timed)
+    if span <= 0:
+        return 0.0, 0.0, len(timed)
+    busy = sum(c.finished_at - c.started_at for c in timed)
+    return len(timed) / span * 60, busy / span, len(timed)
+
+
 def compute_metrics(
     run: RunResult,
     *,
@@ -293,6 +322,7 @@ def compute_metrics(
     # discarding it would make a fully cached re-run report 0 ms, which reads as
     # "instant" rather than "not measured now". ``n_cached`` says which it is.
     latencies = [c.latency_ms for c in cases if c.latency_ms > 0]
+    throughput, in_flight, n_timed = throughput_stats(cases)
     all_field_results = [f for c in cases for f in c.fields]
     n_hall = sum(1 for f in all_field_results if f.outcome is Outcome.HALLUCINATED)
     crit_results = [f for f in all_field_results if f.field in critical]
@@ -342,6 +372,9 @@ def compute_metrics(
         tokens_in_mean=statistics.fmean([c.tokens_in for c in cases]) if cases else 0.0,
         tokens_out_mean=statistics.fmean([c.tokens_out for c in cases]) if cases else 0.0,
         cost_total=sum(c.cost_usd for c in cases),
+        throughput_per_min=throughput,
+        mean_in_flight=in_flight,
+        n_timed=n_timed,
         n_refused=sum(
             1 for c in cases if c.fields and all(f.outcome is Outcome.REFUSED for f in c.fields)
         ),
@@ -391,6 +424,8 @@ class RunDiff:
     latency_ratio_p50: float
     comparable: bool
     incomparable_reason: str = ""
+    throughput_ratio: float = 0.0
+    """Candidate docs/min over baseline. 0 when either run has no timing."""
 
     @property
     def regressions(self) -> list[FieldDelta]:
@@ -546,4 +581,7 @@ def diff_runs(
         latency_ratio_p50=(c_p50 / b_p50) if b_p50 else 0.0,
         comparable=comparable,
         incomparable_reason=reason,
+        throughput_ratio=(c_metrics.throughput_per_min / b_metrics.throughput_per_min)
+        if b_metrics.throughput_per_min and c_metrics.throughput_per_min
+        else 0.0,
     )

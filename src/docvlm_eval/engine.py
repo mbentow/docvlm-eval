@@ -16,7 +16,9 @@ from __future__ import annotations
 
 import asyncio
 import platform
+import time
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 
 from docvlm_eval import __version__
@@ -82,6 +84,13 @@ def build_runner_for(config: Config, corpus: Corpus) -> Runner:
             kwargs["timeout"] = float(config.params["timeout"])
     elif config.runner == "mock":
         kwargs["truths"] = {c.id: c.truth for c in corpus}
+    elif config.runner == "replay":
+        # Relative to the config, like ``prompt``: the pair travels together.
+        source = Path(str(config.params.get("predictions", "")))
+        if config.source_path and not source.is_absolute():
+            beside = Path(config.source_path).parent / source
+            if beside.exists():
+                config.params = {**config.params, "predictions": str(beside)}
     return build_runner(config.runner, config.model, config.params, **kwargs)
 
 
@@ -160,6 +169,8 @@ async def _evaluate_case(
     # The preprocess name is inside config.hash, so a profile change invalidates
     # the cache. The key uses the *raw* image hash: the same source document
     # under two profiles must be two entries, not one.
+    if not runner.cacheable:
+        cache = None
     key = ResultCache.key(config.hash, case.id, case.image_hash(), schema_hash) if cache else ""
 
     hit = cache.get(key) if cache else None
@@ -182,7 +193,11 @@ async def _evaluate_case(
     # Preprocessing happens after the cache lookup: a cache hit should not pay
     # for an image transformation whose result is already known.
     image = await asyncio.to_thread(prepare, case.image_bytes(), config.preprocess)
+    started = time.time()
     output = await runner.extract(image, prompt, json_schema, case_id=case.id)
+    finished = time.time()
+    if not output.started_at:
+        output.started_at, output.finished_at = started, finished
 
     if cache and not output.error:
         cache.put(
@@ -201,7 +216,7 @@ async def _evaluate_case(
             ),
         )
 
-    return score_case(
+    result = score_case(
         case.id,
         case.tags,
         case.truth,
@@ -214,3 +229,6 @@ async def _evaluate_case(
         cost_usd=output.cost_usd,
         raw_output=output.raw,
     )
+    result.confidence = output.confidence
+    result.started_at, result.finished_at = output.started_at, output.finished_at
+    return result

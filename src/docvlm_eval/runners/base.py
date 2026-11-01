@@ -29,6 +29,14 @@ class RunnerOutput:
     cost_usd: float = 0.0
     error: str = ""
     meta: dict[str, Any] = field(default_factory=dict)
+    confidence: float | None = None
+    """Confidence the producing system attached to this document, if it has
+    one. Ranks the risk-coverage curve ahead of any schema field."""
+    started_at: float = 0.0
+    finished_at: float = 0.0
+    """Wall-clock epoch seconds of the call. Left at 0 by live backends — the
+    engine times them. A replay sets them to when the work actually ran, which
+    is what makes throughput of an external pipeline measurable."""
 
 
 class Runner(ABC):
@@ -40,6 +48,9 @@ class Runner(ABC):
     """
 
     name: str = "base"
+    cacheable: bool = True
+    """False for backends that already read recorded output: caching a replay
+    would only keep a stale copy of a file that can be edited under it."""
 
     def __init__(self, model: str, params: dict[str, Any] | None = None) -> None:
         self.model = model

@@ -86,6 +86,12 @@ class CaseResult:
     error: str = ""
     raw_output: str = ""
     cached: bool = False
+    confidence: float | None = None
+    """Supplied by the runner (a replayed pipeline's own score). ``None`` when
+    the backend has none — the selective report then falls back."""
+    started_at: float = 0.0
+    finished_at: float = 0.0
+    """Epoch seconds. 0 on a cache hit: the call was not made now."""
 
     @property
     def all_fields_correct(self) -> bool:
@@ -104,6 +110,9 @@ class CaseResult:
             "error": self.error,
             "raw_output": self.raw_output,
             "cached": self.cached,
+            "confidence": self.confidence,
+            "started_at": self.started_at,
+            "finished_at": self.finished_at,
         }
 
     @classmethod
@@ -119,6 +128,9 @@ class CaseResult:
             error=d.get("error", ""),
             raw_output=d.get("raw_output", ""),
             cached=d.get("cached", False),
+            confidence=d.get("confidence"),
+            started_at=d.get("started_at", 0.0),
+            finished_at=d.get("finished_at", 0.0),
         )
 
 
