@@ -7,10 +7,12 @@ from typing import Any
 from docvlm_eval.runners.base import Runner, RunnerOutput
 from docvlm_eval.runners.mock import MockRunner
 from docvlm_eval.runners.ollama import OllamaRunner
+from docvlm_eval.runners.replay import ReplayRunner
 
 REGISTRY: dict[str, type[Runner]] = {
     "ollama": OllamaRunner,
     "mock": MockRunner,
+    "replay": ReplayRunner,
 }
 
 
@@ -23,4 +25,12 @@ def build_runner(kind: str, model: str, params: dict[str, Any] | None = None, **
     return cls(model=model, params=params, **kwargs)
 
 
-__all__ = ["MockRunner", "OllamaRunner", "REGISTRY", "Runner", "RunnerOutput", "build_runner"]
+__all__ = [
+    "MockRunner",
+    "OllamaRunner",
+    "REGISTRY",
+    "ReplayRunner",
+    "Runner",
+    "RunnerOutput",
+    "build_runner",
+]

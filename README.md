@@ -161,6 +161,42 @@ docvlm-eval sweep --corpus corpora/synthetic-forms-hard --configs "configs/qwen*
 > pairing them would silently compare unrelated documents and report a confident, significant,
 > meaningless delta.
 
+## Score a whole pipeline, not one call
+
+Production extractors are rarely one model call. They read, match a catalogue, ask a judge,
+run a second pass. Re-implementing that behind a runner would measure the copy. So the
+pipeline runs where it lives and records what it decided, one line per document:
+
+```jsonl
+{"_meta": {"pipeline": "intake", "version": "v1.4.2", "concurrency": 2}}
+{"id": "0001", "predicted": {"doctor_crm": "52123"}, "latency_ms": 8120, "confidence": 0.91, "started_at": 1767225600, "finished_at": 1767225608.1}
+```
+
+```yaml
+# configs/my-pipeline.yaml
+name: pipeline-v1.4.2
+runner: replay
+model: pipeline
+params: { predictions: v1.4.2.jsonl }   # relative to this file
+```
+
+Only `id` and `predicted` are required. With the rest, the report gains three things a
+single-call benchmark cannot give you:
+
+- **The pipeline's own latency and throughput.** `started_at`/`finished_at` (epoch or ISO-8601)
+  give `THROUGHPUT docs/min` and `mean in flight` — the parallelism you actually got, which
+  is often less than the parallelism you configured. `diff` reports the ratio.
+- **The coverage curve for the threshold you ship.** `confidence` ranks the risk–coverage
+  curve ahead of any schema field, so "what do we automate at 0.85?" is answered for the
+  score your queue really uses. A document without one is ranked *last*, never given the
+  ground-truth fallback — an oracle no production queue has.
+- **Provenance of the decision, not just the model.** The `_meta` line and the file's
+  SHA-256 go into the run; a re-export is recognisably a different run.
+
+A document missing from the file is `refused`, never filled in — a replay that skipped the
+hard cases must not look perfect. Duplicate ids are an error. Replays are not cached: the file
+is the cache.
+
 <br>
 
 ## What it measures
@@ -214,7 +250,8 @@ came out clean" tells you what to build next.
 Note the `n` column: `rotated` at 1.000 is **one document**. That is a hint, not a finding —
 and the report never lets you forget which is which.
 
-**Operational cost.** Latency p50/p95, tokens in/out, cost per document.
+**Operational cost.** Latency p50/p95, throughput and achieved parallelism, tokens in/out,
+cost per document.
 
 **Whether the answer came from the page or from your prompt.** Every worked example you put in
 the instructions is a string the model can emit without looking at the image, and it will pass
@@ -347,7 +384,8 @@ prompt, the constraint and the scoring can never drift apart.**
 | runner | status |
 |---|---|
 | `ollama` | supported — constrained decoding via `format`, multi-host round robin, digest recorded |
-| `mock` | supported — replays a `predictions.jsonl`, or perturbs the truth deterministically |
+| `mock` | supported — perturbs the truth deterministically, or replays bare predictions |
+| `replay` | supported — a multi-stage pipeline's recorded decisions, with its latency, timestamps and confidence |
 | `mlx` | planned |
 | `openai`-compatible | planned — covers vLLM, SGLang, TGI |
 
@@ -358,6 +396,7 @@ The `Runner` interface is 20 lines. Adding a backend does not touch scoring code
 - [x] per-field scoring, separated failure modes, tag slicing, markdown/HTML reports
 - [x] `diff` with paired bootstrap, result cache, CI gates
 - [x] selective prediction: risk–coverage, AURC vs random ordering, out-of-sample validation
+- [x] pipeline replay: recorded decisions, real throughput, the pipeline's own confidence
 - [ ] MLX and OpenAI-compatible runners
 - [ ] calibration proper: expected calibration error and reliability diagrams
 - [ ] energy per document

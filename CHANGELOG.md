@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.5.0 — 2026-11-01
+
+**Pipeline replay (`runner: replay`).** Scores what a multi-stage extractor decided — read,
+catalogue match, judge, second pass — from one JSON line per document, instead of
+re-implementing the pipeline behind a single model call.
+
+- Latency, tokens and confidence are the pipeline's own; nothing is invented. A `_meta`
+  header line and the file's SHA-256 go into provenance.
+- A document absent from the file is `refused`, never filled from the truth: a replay that
+  skipped the hard cases must not score as perfect. Duplicate ids fail loudly — two answers
+  for one document mean the export joined wrong.
+- Not cached. The file is the cache, and caching it would keep a stale copy of something
+  that gets re-exported.
+- `predictions` resolves relative to the config, like `prompt`.
+
+**Throughput.** Every run with real timestamps now reports docs/min over wall clock and
+*mean in flight* (busy time ÷ wall time) — the parallelism actually achieved. Live backends
+are timed by the engine; replays bring their own `started_at`/`finished_at`. Cache hits are
+excluded rather than counted as instant. `diff` reports the ratio and the verdict flags a
+change beyond 15%.
+
+**Recorded confidence ranks the coverage curve.** A runner-supplied confidence wins over a
+schema field unless `--confidence-field` names one. Documents without a score are ranked
+last, never given the mean-field-score fallback, which is computed from the ground truth.
+
 ## 0.4.0 — 2026-08-11
 
 **Prompt echo detection (`leakage.py`, `docvlm-eval echo`).** Answers a question accuracy

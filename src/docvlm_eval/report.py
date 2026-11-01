@@ -110,6 +110,8 @@ def print_run(metrics: RunMetrics, console: Console | None = None, cases=None) -
         f"tokens in/out {metrics.tokens_in_mean:,.0f}/{metrics.tokens_out_mean:,.0f}"
         + (f"   cost ${metrics.cost_total:.4f}" if metrics.cost_total else "")
     )
+    if metrics.throughput_per_min:
+        console.print(_throughput_line(metrics))
     if metrics.n_cached:
         console.print(
             f"[dim]{metrics.n_cached}/{metrics.n_cases} served from cache — "
@@ -120,6 +122,14 @@ def print_run(metrics: RunMetrics, console: Console | None = None, cases=None) -
     if cases:
         _print_selective(cases, console)
     console.print()
+
+
+def _throughput_line(metrics: RunMetrics) -> str:
+    return (
+        f"THROUGHPUT {metrics.throughput_per_min:,.1f} docs/min   "
+        f"mean in flight {metrics.mean_in_flight:.2f}   "
+        f"(n={metrics.n_timed} timed)"
+    )
 
 
 def _print_selective(cases, console: Console) -> None:
@@ -246,6 +256,11 @@ def verdict(diff: RunDiff) -> str:
             f"latency p50 {diff.latency_ratio_p50:.2f}x "
             f"({diff.candidate.latency_p50:,.0f}ms) — check the queue SLA"
         )
+    if diff.throughput_ratio and abs(diff.throughput_ratio - 1) > 0.15:
+        parts.append(
+            f"throughput {diff.throughput_ratio:.2f}x "
+            f"({diff.candidate.throughput_per_min:,.1f} docs/min)"
+        )
     return "; ".join(parts)
 
 
@@ -342,6 +357,8 @@ def markdown_run(metrics: RunMetrics) -> str:
         f"- cost total ${metrics.cost_total:.4f}",
         f"- cases with no usable output: {metrics.n_refused}",
     ]
+    if metrics.throughput_per_min:
+        lines.insert(-2, f"- {_throughput_line(metrics).lower()}")
     if metrics.n_cached:
         lines.append(
             f"- {metrics.n_cached}/{metrics.n_cases} served from cache; the latency above is "
@@ -386,11 +403,16 @@ def markdown_diff(diff: RunDiff) -> str:
         f"| {diff.candidate.critical_hallucination_rate * 100:.2f}% |",
         f"| latency p50 | {diff.baseline.latency_p50:,.0f} ms "
         f"| {diff.candidate.latency_p50:,.0f} ms |",
+        f"| throughput | {_rate_cell(diff.baseline)} | {_rate_cell(diff.candidate)} |",
         "",
         f"**Verdict:** {_strip_markup(verdict(diff))}",
         "",
     ]
     return "\n".join(lines)
+
+
+def _rate_cell(metrics: RunMetrics) -> str:
+    return f"{metrics.throughput_per_min:,.1f} docs/min" if metrics.throughput_per_min else "—"
 
 
 def _strip_markup(text: str) -> str:
