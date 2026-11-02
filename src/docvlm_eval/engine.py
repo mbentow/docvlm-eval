@@ -28,6 +28,7 @@ from docvlm_eval.config import DEFAULT_PROMPT, Config
 from docvlm_eval.corpus import Case, Corpus
 from docvlm_eval.preprocess import describe as describe_profile
 from docvlm_eval.preprocess import prepare
+from docvlm_eval.privacy import redact_case
 from docvlm_eval.runners import Runner, build_runner
 from docvlm_eval.types import CaseResult, RunResult
 
@@ -71,6 +72,10 @@ def resolve_scoring_policy(corpus: Corpus, config: Config) -> tuple[dict[str, fl
     critical = {name for name, spec in specs.items() if spec.critical}
     critical.update(config.critical_fields)
     return weights, sorted(critical)
+
+
+def pii_fields(corpus: Corpus) -> set[str]:
+    return {name for name, spec in corpus.schema.specs().items() if spec.pii}
 
 
 def build_runner_for(config: Config, corpus: Corpus) -> Runner:
@@ -122,8 +127,11 @@ async def run_config(
             if progress is not None:
                 progress(results[case.id])
 
+    pii = pii_fields(corpus)
     try:
         await asyncio.gather(*(one(case) for case in corpus))
+        for result in results.values():
+            redact_case(result, pii, corpus.hash)
         backend_info = await runner.describe()
     finally:
         await runner.aclose()

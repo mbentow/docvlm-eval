@@ -79,8 +79,15 @@ class FieldSpec:
     critical: bool = False
     """Marks a field where a hallucination is a safety issue, not a nuisance.
     Reports flag it; ``--fail-under`` can gate on it separately."""
+    pii: bool = False
+    """Personal data. Scored on the real value, stored only as a keyed hash
+    (see :mod:`docvlm_eval.privacy`)."""
 
     def to_dict(self) -> dict[str, Any]:
+        # ``pii`` only when set: the dict lands in the JSON Schema, whose hash is
+        # part of every corpus hash and cache key. Emitting ``pii: false`` for
+        # everyone would make every existing run incomparable for nothing.
+        extra = {"pii": True} if self.pii else {}
         return {
             "compare": self.compare,
             "normalize": list(self.normalize),
@@ -90,6 +97,7 @@ class FieldSpec:
             "dayfirst": self.dayfirst,
             "weight": self.weight,
             "critical": self.critical,
+            **extra,
         }
 
 
@@ -105,6 +113,7 @@ def field(
     dayfirst: bool = True,
     weight: float = 1.0,
     critical: bool = False,
+    pii: bool = False,
     **kwargs: Any,
 ) -> Any:
     """Declare a schema field together with its comparison policy.
@@ -137,6 +146,7 @@ def field(
         dayfirst=dayfirst,
         weight=weight,
         critical=critical,
+        pii=pii,
     )
     extra = dict(kwargs.pop("json_schema_extra", {}) or {})
     return PydanticField(
@@ -165,6 +175,7 @@ def spec_of(info: FieldInfo) -> FieldSpec:
         dayfirst=bool(raw.get("dayfirst", True)),
         weight=float(raw.get("weight", 1.0)),
         critical=bool(raw.get("critical", False)),
+        pii=bool(raw.get("pii", False)),
     )
 
 

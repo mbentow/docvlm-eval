@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.6.0 — 2026-11-01
+
+**Early stopping (`watch`, `sequential.py`).** Tails a replay file while the pipeline writes
+it and stops the A/B at the first planned look that decides: `better`, `worse`,
+`equivalent` (interval inside `±margin`) or `harm` (critical hallucinations up). Undecided at
+the end is `inconclusive`.
+
+- Lan–DeMets O'Brien–Fleming-type alpha spending; each look tests at its own increment, so
+  the union bound keeps the false-stop rate at or below `alpha` without simulation. Half of
+  each increment goes to quality, half to harm.
+- Per-document paired differences with a normal interval: pairing removes document
+  difficulty, and the normal quantile is exact at the tiny alphas of early looks, where a
+  bootstrap would need tens of thousands of resamples.
+- A variance floor of half a discordant pair: 30 identical documents are not equivalence.
+- Tolerates a half-written last line; the first answer for an id wins; the status file is
+  replaced atomically; exit 2 on `worse`/`harm`.
+- Simulated: +2.4 pp on a pipeline that changes 5% of documents is decided at ~42% of the
+  corpus; false stops 1–2% against a 2.5% budget.
+
+**`order`.** Stratified, seeded run order where every prefix holds each stratum's share to
+within one document — the condition that makes stopping early measure the corpus, not its
+first rows.
+
+**`agree`.** Self-agreement between two runs of one config: value agreement and correctness
+flips per field, the noise delta with its interval, and the smallest delta distinguishable
+from it. Exits 2 when the config is not reproducible.
+
+**`pii=True` fields.** Scored on the real value, stored as a corpus-keyed hash; `raw_output`
+dropped. Runs and cache of a PII corpus are refused inside a git work tree unless ignored.
+Schemas without PII keep their hash, so every existing run stays comparable.
+
+`configs/eco-*.yaml` renamed `configs/pt-*.yaml`.
+
 ## 0.5.0 — 2026-11-01
 
 **Pipeline replay (`runner: replay`).** Scores what a multi-stage extractor decided — read,
