@@ -120,7 +120,13 @@ def _dur(seconds: float) -> str:
 
 
 def elapsed_since(cases: list[CaseResult], fallback_start: float) -> float:
-    """Wall time of the benchmark itself when it recorded timestamps, else of the watch."""
-    starts = [c.started_at for c in cases if c.started_at > 0]
-    start = min(starts) if starts else fallback_start
-    return max(0.0, time.time() - start)
+    """Wall time the benchmark spent on what has arrived so far.
+
+    From its own timestamps when it recorded them — first start to last finish,
+    so scoring an old file reports the run's duration, not the file's age — and
+    otherwise from when the watch started.
+    """
+    timed = [c for c in cases if c.started_at > 0 and c.finished_at > 0]
+    if timed:
+        return max(c.finished_at for c in timed) - min(c.started_at for c in timed)
+    return max(0.0, time.time() - fallback_start)
