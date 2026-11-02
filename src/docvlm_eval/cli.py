@@ -7,6 +7,9 @@
     docvlm-eval report   --run mock-baseline --format html --out out/
     docvlm-eval diff     --baseline mock-baseline --candidate qwen3vl-30b
     docvlm-eval sweep    --corpus corpora/synthetic-forms --configs "configs/*.yaml"
+    docvlm-eval order    --corpus corpora/synthetic-forms --out order.txt
+    docvlm-eval watch    --corpus corpora/synthetic-forms -b baseline -p preds.jsonl
+    docvlm-eval agree    -a run-1 -b run-2
 
 ``--fail-under`` on ``run`` and ``diff`` makes the tool usable as a CI gate,
 which is what turns an evaluator from a personal script into something a team
@@ -17,20 +20,26 @@ from __future__ import annotations
 
 import asyncio
 import glob as globlib
+import json
 import sys
+import time
 from pathlib import Path
 
 import typer
 from rich.console import Console
 
 from docvlm_eval import __version__
+from docvlm_eval.agree import agreement
+from docvlm_eval.agree import render as render_agreement
 from docvlm_eval.cache import ResultCache
 from docvlm_eval.config import load_config
 from docvlm_eval.corpus import CorpusError, load_corpus
-from docvlm_eval.engine import run_config
+from docvlm_eval.engine import pii_fields, run_config
 from docvlm_eval.leakage import leakage_report
 from docvlm_eval.leakage import render as render_leakage
 from docvlm_eval.metrics import compute_metrics, diff_runs
+from docvlm_eval.order import stratified_order, stratum_of
+from docvlm_eval.privacy import TrackedOutputError, guard_untracked, redact_case
 from docvlm_eval.report import (
     html_run,
     markdown_diff,
@@ -42,7 +51,11 @@ from docvlm_eval.report import (
     sweep_table,
     write_reports,
 )
+from docvlm_eval.sequential import SequentialPlan, SequentialState, evaluate
+from docvlm_eval.sequential import verdict as sequential_verdict
 from docvlm_eval.store import RunStore
+from docvlm_eval.types import RunResult
+from docvlm_eval.watch import PredictionTail, elapsed_since, progress_line, score_record
 
 app = typer.Typer(
     add_completion=False,
@@ -135,6 +148,9 @@ def run(
     fail_hallucination_over: float = typer.Option(
         None, help="Exit non-zero if the hallucination rate exceeds this."
     ),
+    allow_tracked: bool = typer.Option(
+        False, help="Allow writing a PII corpus's runs/cache inside a git work tree."
+    ),
 ) -> None:
     """Evaluate one config over one corpus."""
     try:
@@ -151,6 +167,15 @@ def run(
     if not len(loaded):
         err.print("[red]no cases left after filtering[/red]")
         raise typer.Exit(EXIT_BAD_INPUT)
+
+    if pii_fields(loaded):
+        try:
+            guard_untracked(runs_dir, allow=allow_tracked)
+            if not no_cache:
+                guard_untracked(cache_dir, allow=allow_tracked)
+        except TrackedOutputError as exc:
+            err.print(f"[red]{exc}[/red]")
+            raise typer.Exit(EXIT_BAD_INPUT) from exc
 
     cfg = load_config(config)
     cache = ResultCache(cache_dir, enabled=not no_cache)
@@ -439,6 +464,199 @@ def cache(
             f"{stats.get('size_bytes', 0) / 1024:.1f} KB · {stats.get('path')}"
         )
     store.close()
+
+
+@app.command()
+def order(
+    corpus: Path = typer.Option(..., "--corpus", "-c"),
+    out: Path = typer.Option(..., "--out", "-o", help="One case id per line."),
+    by: str = typer.Option(
+        "first", help="Stratum: 'first' tag, 'all' tags, or a tag prefix such as 'stratum_'."
+    ),
+    seed: int = typer.Option(7),
+) -> None:
+    """Write a run order where every prefix is a fair sample of the corpus.
+
+    Feed the pipeline in this order and ``watch`` can stop it early without
+    measuring only the documents that happened to come first.
+    """
+    try:
+        loaded = load_corpus(corpus)
+    except CorpusError as exc:
+        err.print(f"[red]{exc}[/red]")
+        raise typer.Exit(EXIT_BAD_INPUT) from exc
+    ids = stratified_order(loaded, by=by, seed=seed)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text("\n".join(ids) + "\n", encoding="utf-8")
+    counts: dict[str, int] = {}
+    for case in loaded:
+        key = stratum_of(case.tags, by)
+        counts[key] = counts.get(key, 0) + 1
+    console.print(f"{len(ids)} cases in {len(counts)} strata -> {out}")
+    for key, n in sorted(counts.items(), key=lambda kv: -kv[1]):
+        console.print(f"  {key:<24} {n:>5}  {n / len(ids):5.1%}")
+
+
+@app.command()
+def watch(
+    corpus: Path = typer.Option(..., "--corpus", "-c"),
+    baseline: str = typer.Option(..., "--baseline", "-b"),
+    predictions: Path = typer.Option(
+        ..., "--predictions", "-p", help="Replay .jsonl being written."
+    ),
+    runs_dir: Path = typer.Option(Path("runs")),
+    metric: str = typer.Option("macro", help="macro | afc (all fields correct)."),
+    margin: float = typer.Option(0.01, help="Equivalence margin on the metric."),
+    looks: int = typer.Option(10, help="Planned looks over the whole corpus."),
+    alpha: float = typer.Option(0.05, help="Total false-stop budget over all looks."),
+    follow: bool = typer.Option(True, "--follow/--once", help="Keep tailing, or score once."),
+    interval: float = typer.Option(15.0, help="Seconds between reads while following."),
+    idle_timeout: float = typer.Option(
+        0.0, help="Give up after this many seconds without a new document (0 = never)."
+    ),
+    status_file: Path = typer.Option(None, help="JSON decision, rewritten on every read."),
+    save: str = typer.Option("", help="Also store the candidate as a run under this name."),
+    overwrite: bool = typer.Option(False),
+    allow_tracked: bool = typer.Option(False),
+) -> None:
+    """Score a growing predictions file and stop as soon as the A/B is decided.
+
+    Exit 0 when better, equivalent, inconclusive or still running (--once);
+    exit 2 when worse or when critical hallucinations went up — so it gates.
+    """
+    try:
+        loaded = load_corpus(corpus)
+        base = RunStore(runs_dir).load(baseline)
+    except (CorpusError, FileNotFoundError) as exc:
+        err.print(f"[red]{exc}[/red]")
+        raise typer.Exit(EXIT_BAD_INPUT) from exc
+    if base.corpus_hash != loaded.hash:
+        err.print(f"[red]NOT COMPARABLE[/red] baseline corpus {base.corpus_hash} != {loaded.hash}")
+        raise typer.Exit(EXIT_BAD_INPUT)
+    if metric not in ("macro", "afc"):
+        err.print("[red]--metric must be macro or afc[/red]")
+        raise typer.Exit(EXIT_BAD_INPUT)
+    pii = pii_fields(loaded)
+    if save and pii:
+        try:
+            guard_untracked(runs_dir, allow=allow_tracked)
+        except TrackedOutputError as exc:
+            err.print(f"[red]{exc}[/red]")
+            raise typer.Exit(EXIT_BAD_INPUT) from exc
+
+    base_by_id = {c.case_id: c for c in base.cases if loaded.by_id(c.case_id)}
+    plan = SequentialPlan(
+        n_total=len(base_by_id), alpha=alpha, looks=looks, margin=margin, metric=metric
+    )
+    state = SequentialState(plan, weights=base.weights, critical=set(base.critical_fields))
+    tail = PredictionTail(predictions)
+    cases = []
+    started = time.time()
+    last_new = started
+    console.print(
+        f"watching {predictions} vs [bold]{base.name}[/bold] · {plan.n_total} paired documents · "
+        f"looks at {plan.look_sizes()} · alpha {alpha} · margin ±{margin}"
+    )
+
+    while True:
+        fresh = [r for r in (score_record(rec, loaded) for rec in tail.read_new()) if r]
+        if fresh:
+            last_new = time.time()
+            cases.extend(fresh)
+        for look in evaluate(state, base_by_id, cases):
+            console.print(
+                f"  look n={look.n:<5} α={look.alpha:.2e}  Δ {look.delta:+.4f} "
+                f"[{look.low:+.4f}, {look.high:+.4f}]  -> {look.decision}"
+            )
+        paired = sum(1 for c in cases if c.case_id in base_by_id)
+        note = (
+            f"Δ {state.looks[-1].delta:+.4f} · {state.decision}"
+            if state.looks
+            else f"first look at {plan.look_sizes()[0] if plan.look_sizes() else '?'}"
+        )
+        console.print(
+            progress_line(paired, plan.n_total, elapsed_since(cases, started), note),
+            highlight=False,
+        )
+        if status_file:
+            _write_status(status_file, state, paired, tail.meta)
+        done = state.stopped or paired >= plan.n_total
+        idle = idle_timeout and time.time() - last_new > idle_timeout
+        if done or not follow or idle:
+            break
+        time.sleep(interval)
+
+    if tail.duplicates:
+        err.print(f"[yellow]{tail.duplicates} duplicate id(s) ignored (first answer kept)[/yellow]")
+    console.print(f"[bold]VERDICT:[/bold] {sequential_verdict(state)}")
+
+    if save:
+        for case in cases:
+            redact_case(case, pii, loaded.hash)
+        run_result = RunResult(
+            name=save,
+            corpus_name=loaded.name,
+            corpus_hash=loaded.hash,
+            config_name=save,
+            config_hash="",
+            field_names=list(loaded.schema.model_fields),
+            cases=cases,
+            weights=base.weights,
+            critical_fields=base.critical_fields,
+            provenance={
+                "docvlm_eval_version": __version__,
+                "backend": {"runner": "watch", "pipeline": tail.meta},
+                "sequential": {
+                    "decision": state.decision,
+                    "looks": [lk.to_dict() for lk in state.looks],
+                    "n_total": plan.n_total,
+                },
+                "partial": paired < plan.n_total,
+            },
+        )
+        path = RunStore(runs_dir).save(run_result, overwrite=overwrite)
+        console.print(f"[dim]run saved to {path}[/dim]")
+
+    if state.decision in ("worse", "harm"):
+        raise typer.Exit(EXIT_GATE_FAILED)
+
+
+def _write_status(path: Path, state: SequentialState, paired: int, meta: dict) -> None:
+    payload = {
+        "decision": state.decision,
+        "stop": state.stopped,
+        "verdict": sequential_verdict(state),
+        "n": paired,
+        "n_total": state.plan.n_total,
+        "looks": [lk.to_dict() for lk in state.looks],
+        "pipeline": meta,
+        "updated_at": time.time(),
+    }
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    tmp.replace(path)  # atomic: a reader never sees half a decision
+
+
+@app.command()
+def agree(
+    a: str = typer.Option(..., "-a", help="First run of the config."),
+    b: str = typer.Option(..., "-b", help="Second run of the same config."),
+    runs_dir: Path = typer.Option(Path("runs")),
+) -> None:
+    """How much a config disagrees with itself: the noise floor under every diff."""
+    store = RunStore(runs_dir)
+    try:
+        ra, rb = store.load(a), store.load(b)
+    except FileNotFoundError as exc:
+        err.print(f"[red]{exc}[/red]")
+        raise typer.Exit(EXIT_BAD_INPUT) from exc
+    if ra.corpus_hash != rb.corpus_hash:
+        err.print("[red]NOT COMPARABLE[/red] the two runs used different corpora")
+        raise typer.Exit(EXIT_BAD_INPUT)
+    report = agreement(ra, rb)
+    print(render_agreement(report))
+    if not report.reproducible:
+        raise typer.Exit(EXIT_GATE_FAILED)
 
 
 def _split(value: str) -> list[str] | None:

@@ -199,6 +199,80 @@ is the cache.
 
 <br>
 
+## Stop a long benchmark as soon as it has answered
+
+On a backend that serves one document at a time, a 2,700-document A/B is an afternoon. Most
+of the time the answer is known long before the end — and the documents you do not run are
+the only speed-up left.
+
+```bash
+docvlm-eval order --corpus my-corpus --out order.txt          # 1. fix a fair run order
+#   ...the pipeline reads documents in that order and appends to cand.jsonl...
+docvlm-eval watch --corpus my-corpus -b baseline -p cand.jsonl \
+                  --status-file status.json --save cand           # 2. stop when decided
+```
+
+A simulated run of a candidate that is 2.4 pp better:
+
+```
+looks at [270, 540, 810, ...] · alpha 0.05 · margin ±0.01
+  look n=1080  α=1.60e-03  Δ +0.0236 [+0.0091, +0.0381]  -> better
+[########------------]  40% · 1080/2700 · 1h52m elapsed · ETA ~2h48m · Δ +0.0236 · better
+VERDICT: STOP — better, Δ +0.0236 [+0.0091, +0.0381] at 1080/2700 documents; 1620 documents not needed
+```
+
+Peeking at a running result and stopping "when it looks significant" manufactures findings,
+so this does not do that:
+
+- **Planned looks, spent error budget.** `alpha` is spread over the looks with an
+  O'Brien–Fleming-type spending function; each look tests at its own increment, and the
+  increments add up to `alpha`. Stopping at 10% needs an overwhelming effect; running to the
+  end costs almost nothing against a single fixed test.
+- **Four ways to stop:** `better`, `worse`, `equivalent` (the whole interval inside
+  `±margin`), and `harm` — critical-field hallucinations went up, whatever accuracy did.
+  Reaching the end undecided is `inconclusive`, which still bounds the difference.
+- **A fair prefix.** `order` interleaves strata so that after any number of documents each
+  has had its share, to within one. The order is fixed before any result exists.
+- **Exit codes that gate:** `watch` exits 2 on `worse` or `harm`. The status file is
+  rewritten atomically on every read, so a benchmark loop can poll it and stop itself.
+
+Simulated on 2,700 documents (200 trials each, `alpha` 0.05, looks every 10%):
+
+| true difference | documents needed (mean) | decided |
+|---|---:|---|
+| +2.4 pp, 95% of documents unchanged | 42% | `better` in 200/200 |
+| ±5 pp | 42–43% | `better` / `worse` in 200/200 |
+| +10 pp | 23% | `better` in 200/200 |
+| none, 95% unchanged, margin ±1 pp | 90% | `equivalent` in 127/200 |
+| none (false stops) | — | 1–2% of trials |
+
+Change a pipeline less and you stop sooner: what drives it is how many documents actually
+change, not how many there are.
+
+### How much does the config disagree with itself?
+
+```bash
+docvlm-eval agree -a base-run1 -b base-run2
+```
+
+Same config, two runs. Per field: how often the value is identical, how often correctness
+flips, and the smallest delta distinguishable from that noise. If the same config scores
+differently on its own, `agree` says **NOT REPRODUCIBLE** and exits 2 — fix determinism
+before trusting any diff.
+
+### Personal data
+
+```python
+patient_name: str | None = field(None, compare=Compare.TEXT, pii=True)
+```
+
+A `pii` field is scored on its real value in memory and stored only as a hash keyed with the
+corpus hash; `raw_output` is dropped. Every number survives, including agreement between
+runs, and no run file, report or diff carries the value. A run of a corpus with PII fields is
+refused inside a git work tree unless git ignores the path (`--allow-tracked` to override).
+
+<br>
+
 ## What it measures
 
 **Six outcomes per field, never one score.**
@@ -397,6 +471,7 @@ The `Runner` interface is 20 lines. Adding a backend does not touch scoring code
 - [x] `diff` with paired bootstrap, result cache, CI gates
 - [x] selective prediction: risk–coverage, AURC vs random ordering, out-of-sample validation
 - [x] pipeline replay: recorded decisions, real throughput, the pipeline's own confidence
+- [x] sequential A/B with early stopping, stratified run order, self-agreement, PII fields
 - [ ] MLX and OpenAI-compatible runners
 - [ ] calibration proper: expected calibration error and reliability diagrams
 - [ ] energy per document

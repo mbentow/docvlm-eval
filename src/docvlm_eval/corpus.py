@@ -85,6 +85,13 @@ class Corpus:
     def __iter__(self):
         return iter(self.cases)
 
+    def by_id(self, case_id: str) -> Case | None:
+        index = self.__dict__.get("_index")
+        if index is None:
+            index = {c.id: c for c in self.cases}
+            self.__dict__["_index"] = index
+        return index.get(case_id)
+
     def filter(
         self,
         *,
